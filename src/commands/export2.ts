@@ -17,7 +17,6 @@ export function builder(yargs:typeof import("yargs")) {
     .string("to")
     .string("one").describe("one","导出单张表格的模板")
     .string("onename").describe("one","名称模板，会自动替换name为表名")
-    .default("onename","name.json")
     .array("alls").describe("alls","导出所有数据的模板 可以为多个")
     .array("allnames").describe("allnames","导出所有数据的文件名 数量必须和alls匹配")
     .array("inject").describe("inject","注入到模板中的boolean形变量，可以间接控制模板功能")
@@ -58,6 +57,10 @@ export async function handler(argv: any) {
     let injectMap: { [key: string]: boolean } = {}
     for (let k of inject) {
         injectMap[k] = true;
+    }
+
+    if (onename==null){
+        onename=`name.${one}`
     }
 
     //加载所有表格数据

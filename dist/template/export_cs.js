@@ -76,7 +76,6 @@ function export_cs(paras) {
         }
         else if (t == "number[]") {
             let values = value;
-            console.log("vlkwjef", values);
             return `new double[]{${values.join(", ")}}`;
         }
         else if (t == "uid") {

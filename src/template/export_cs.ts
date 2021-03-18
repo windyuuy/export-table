@@ -85,7 +85,6 @@ export function export_cs(paras: ExportParams): string | null {
 			return `${value}`
 		} else if (t == "number[]") {
 			let values=value as number[]
-			console.log("vlkwjef",values)
 			return `new double[]{${values.join(", ")}}`
 		} else if (t == "uid") {
 			return `${value}`

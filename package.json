@@ -1,10 +1,10 @@
 {
     "name": "windy-quicktable",
-    "version": "1.3.3",
+    "version": "1.3.5",
     "description": "",
     "main": "dist/index.js",
     "scripts": {
-        "publish": "ccf publish",
+        "pubccf": "ccf publish",
         "revise": "ccf revise --registry http://127.0.0.1:8081"
     },
     "bin": {
