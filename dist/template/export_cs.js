@@ -15,7 +15,8 @@ function export_cs(paras) {
     let firstLetterLower = function (str) {
         return str.charAt(0).toLowerCase() + str.slice(1);
     };
-    let convVarName = firstLetterUpper;
+    let convMemberName = firstLetterUpper;
+    let convVarName = firstLetterLower;
     let RowClass = firstLetterUpper(name);
     let initFunc = name + "Init";
     let mapfield = fields.find(a => a.type == "key"); //如果是map，则生成对应的map
@@ -124,7 +125,7 @@ ${st(() => datas.map(data => `		new ${RowClass}(${st(() => fields.map((f, index)
 	public ${RowClass}() { }
 	public ${RowClass}(${st(() => fields.map(f => `${getFieldType(f.type)} ${convVarName(f.name)}`).join(", "))})
 	{
-${st(() => fields.map(f => `		this.${convVarName(f.name)} = ${convVarName(f.name)};`).join("\n"))}
+${st(() => fields.map(f => `		this.${convMemberName(f.name)} = ${convVarName(f.name)};`).join("\n"))}
 	}
 
 	${cmm( /**生成字段 */)}
@@ -132,7 +133,7 @@ ${st(() => fields.map(f => `		this.${convVarName(f.name)} = ${convVarName(f.name
 	/// <summary>
 	/// ${f.describe}
 	/// </summary>
-	public ${getFieldType(f.type)} ${convVarName(f.name)};
+	public ${getFieldType(f.type)} ${convMemberName(f.name)};
 	`).join(""))()}
 }
 `;

@@ -38,7 +38,8 @@ export function export_cs(paras: ExportParams): string | null {
 	let firstLetterLower = function (str: string) {
 		return str.charAt(0).toLowerCase() + str.slice(1);
 	};
-	let convVarName = firstLetterUpper
+	let convMemberName = firstLetterUpper
+	let convVarName = firstLetterLower
 	
 	let RowClass = firstLetterUpper(name)
 	let initFunc = name + "Init"
@@ -133,7 +134,7 @@ ${st(() =>
 	{
 ${st(() =>
 			fields.map(f =>
-`		this.${convVarName(f.name)} = ${convVarName(f.name)};`
+`		this.${convMemberName(f.name)} = ${convVarName(f.name)};`
 			).join("\n")
 		)}
 	}
@@ -143,7 +144,7 @@ ${st(() =>
 	/// <summary>
 	/// ${f.describe}
 	/// </summary>
-	public ${getFieldType(f.type)} ${convVarName(f.name)};
+	public ${getFieldType(f.type)} ${convMemberName(f.name)};
 	`
 	).join("")
 	)()}
