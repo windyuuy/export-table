@@ -1,0 +1,183 @@
+{
+    "name": "quicktable",
+    "version": "1.3.1",
+    "files": [
+        "dist/**/*.js",
+        "template/*.razor",
+        "node_modules/**/",
+        "package.json"
+    ],
+    "tags": [],
+    "commands": [{
+            "name": "export",
+            "label": "导出excel",
+            "command": "export <from> <to>",
+            "type": "nodejs",
+            "args": [{
+                    "name": "from",
+                    "label": "导出的excel文件目录",
+                    "type": "directory"
+                },
+                {
+                    "name": "to",
+                    "label": "导出的文件目录",
+                    "type": "directory"
+                },
+                {
+                    "name": "one",
+                    "label": "导出每一个excel时，分别使用的模版",
+                    "type": "file",
+                    "option": true
+                },
+                {
+                    "name": "onename",
+                    "label": "每一个导出对象的模版名称，[name】会被替换为表名",
+                    "type": "string",
+                    "default": "name.json",
+                    "option": true
+                },
+                {
+                    "name": "alls",
+                    "label": "整合所有excel数据时所使用的模版",
+                    "type": "file",
+                    "isArray": true,
+                    "option": true
+                },
+                {
+                    "name": "allnames",
+                    "label": "导出整合excel数据的文件名，数量必须和alls匹配",
+                    "type": "string",
+                    "isArray": true,
+                    "option": true
+                },
+                {
+                    "name": "inject",
+                    "label": "注入到模板中的boolean形变量，可以间接控制模板功能",
+                    "type": "string",
+                    "isArray": true,
+                    "option": true
+                },
+                {
+                    "name": "packagename",
+                    "label": "特殊变量，命名空间，主要用于有命名空间的代码生成",
+                    "type": "string",
+                    "isArray": false,
+                    "option": true
+                },
+                {
+                    "name": "tableNameFirstLetterUpper",
+                    "label": "导出的表名首字母是否大小",
+                    "type": "boolean",
+                    "isArray": false,
+                    "option": true
+                }
+            ]
+        },
+        {
+            "name": "genlocal",
+            "label": "从目标excel中增量提取多语言表模版",
+            "command": "genlocal <from> <to>",
+            "type": "nodejs",
+            "args": [{
+                    "name": "from",
+                    "label": "导出的excel文件目录",
+                    "type": "directory"
+                },
+                {
+                    "name": "to",
+                    "label": "导出的文件目录",
+                    "type": "directory"
+                },
+                {
+                    "name": "lang",
+                    "label": "当前表格默认的语言",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "splitlocal",
+            "label": "分割多语言表模版为多个文件",
+            "command": "splitlocal <from> <to>",
+            "type": "nodejs",
+            "args": [{
+                    "name": "from",
+                    "label": "被分割的excel文件",
+                    "type": "file"
+                },
+                {
+                    "name": "to",
+                    "label": "导出的文件目录",
+                    "type": "directory"
+                },
+                {
+                    "name": "template",
+                    "label": "导出的模版",
+                    "type": "file"
+                },
+                {
+                    "name": "name",
+                    "label": "导出的文件名模版,lang替换为当前的语言值",
+                    "type": "string",
+                    "default": "local_lang.json",
+                    "option": true
+                }
+            ]
+        },
+        {
+            "name": "genccstrings",
+            "label": "针对Cocos工程增量生成需要翻译的语言模版",
+            "command": "genccstrings <from> <to>",
+            "type": "nodejs",
+            "args": [{
+                    "name": "from",
+                    "label": "Cocos工程目录",
+                    "type": "directory"
+                },
+                {
+                    "name": "to",
+                    "label": "导出的文件目录",
+                    "type": "directory"
+                },
+                {
+                    "name": "lang",
+                    "type": "string",
+                    "label": "默认语言",
+                    "default": "zh",
+                    "option": true
+                }
+            ]
+        },
+        {
+            "name": "diff",
+            "label": "分离出当前版本和之前版本的差异文件",
+            "command": "diff <from> <to>",
+            "type": "nodejs",
+            "args": [{
+                    "name": "from",
+                    "label": "git工程目录",
+                    "type": "directory"
+                },
+                {
+                    "name": "to",
+                    "label": "分离后的文件目录",
+                    "type": "directory"
+                },
+                {
+                    "name": "tag",
+                    "label": "对比的tag名称",
+                    "type": "string"
+                },
+                {
+                    "name": "exts",
+                    "label": "对比的扩展名",
+                    "type": "string",
+                    "isArray": true,
+                    "default": [".png", ".jpg"],
+                    "option": true
+                }
+            ]
+        }
+    ],
+    "uses": []
+}

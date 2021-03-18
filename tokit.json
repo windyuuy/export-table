@@ -1,0 +1,337 @@
+{
+	"meta": {
+		"hostId": "QuickTable",
+		"name": "表格工具箱"
+	},
+	"init": {
+		"install": [
+			"npm install"
+		]
+	},
+	"commands": [
+		{
+			"meta": {
+				"name": "导表"
+			},
+			"args": {
+				"command": "node . export ",
+				"argumentList": [
+					{
+						"type": "PathChooseKitArg",
+						"title": "excel路径",
+						"key": "from"
+					},
+					{
+						"type": "PathChooseKitArg",
+						"title": "导出路径",
+						"key": "to"
+					},
+					{
+						"type": "InputTextArg",
+						"title": "单文件导出模板",
+						"key": "one"
+					},
+					{
+						"type": "InputTextArg",
+						"title": "初始化对象",
+						"key": "onename"
+					},
+					{
+						"type": "InputTextArg",
+						"title": "多数据导出，空格分割",
+						"key": "alls"
+					},
+					{
+						"type": "InputTextArg",
+						"title": "多数据导出，空格分隔",
+						"key": "allnames"
+					},
+					{
+						"type": "InputTextArg",
+						"title": "注入变量",
+						"key": "inject"
+					}
+				]
+			},
+			"argsFormTemps": [
+				{
+					"meta": {
+						"name": "正常导出"
+					},
+					"args": [
+						{
+							"key": "from",
+							"value": "${PROJECT_DIR}/../excel"
+						},
+						{
+							"key": "to",
+							"value": "${PROJECT_DIR}/assets/scripts/configs"
+						},
+						{
+							"key": "one",
+							"value": "template/export_ts.razor"
+						},
+						{
+							"key": "onename",
+							"value": "name.ts"
+						},
+						{
+							"key": "alls",
+							"value": "template/tableinit_ts.razor template/tabledatas_json.razor template/applylocal_ts.razor"
+						},
+						{
+							"key": "allnames",
+							"value": "TableInit.ts table.json ApplyLocal.ts"
+						},
+						{
+							"key": "inject",
+							"value": ""
+						}
+					]
+				},
+				{
+					"meta": {
+						"name": "导出空表"
+					},
+					"args": [
+						{
+							"key": "from",
+							"value": "${PROJECT_DIR}/../excel"
+						},
+						{
+							"key": "to",
+							"value": "${PROJECT_DIR}/assets/scripts/configs"
+						},
+						{
+							"key": "one",
+							"value": "template/export_ts.razor"
+						},
+						{
+							"key": "onename",
+							"value": "name.ts"
+						},
+						{
+							"key": "alls",
+							"value": "template/tableinit_ts.razor template/tabledatas_json.razor template/applylocal_ts.razor"
+						},
+						{
+							"key": "allnames",
+							"value": "TableInit.ts table.json ApplyLocal.ts"
+						},
+						{
+							"key": "inject",
+							"value": "nulldata"
+						}
+					]
+				}
+
+			]
+		},
+		{
+			"meta": {
+				"name": "生成多语言表"
+			},
+			"args": {
+				"command": "node . genlocal ",
+				"argumentList": [
+					{
+						"type": "PathChooseKitArg",
+						"title": "excel路径",
+						"key": "from"
+					},
+					{
+						"type": "PathChooseKitArg",
+						"title": "导出的excel文件路径",
+						"key": "to"
+					},
+					{
+						"type":"InputTextArg",
+						"title":"默认语言",
+						"key":"lang"
+					}
+				]
+			},
+			"argsFormTemps": [
+				{
+					"meta": {
+						"name": "正常导出"
+					},
+					"args": [
+						{
+							"key": "from",
+							"value": "${PROJECT_DIR}/../excel"
+						},
+						{
+							"key": "to",
+							"value": "${PROJECT_DIR}/../local.xlsx"
+						},
+						{
+							"key":"lang",
+							"value":"zh"
+						}
+					]
+				}
+
+			]
+		},
+		{
+			"meta": {
+				"name": "生成字符串表"
+			},
+			"args": {
+				"command": "node . genccstrings ",
+				"argumentList": [
+					{
+						"type": "PathChooseKitArg",
+						"title": "excel路径",
+						"key": "from"
+					},
+					{
+						"type": "PathChooseKitArg",
+						"title": "导出的excel文件路径",
+						"key": "to"
+					},
+					{
+						"type":"InputTextArg",
+						"title":"默认语言",
+						"key":"lang"
+					}
+				]
+			},
+			"argsFormTemps": [
+				{
+					"meta": {
+						"name": "正常导出"
+					},
+					"args": [
+						{
+							"key": "from",
+							"value": "${PROJECT_DIR}/assets"
+						},
+						{
+							"key": "to",
+							"value": "${PROJECT_DIR}/../strings.xlsx"
+						},
+						{
+							"key":"lang",
+							"value":"zh"
+						}
+					]
+				}
+
+			]
+		},
+		{
+			"meta": {
+				"name": "导出多语言表"
+			},
+			"args": {
+				"command": "node . splitlocal ",
+				"argumentList": [
+					{
+						"type": "PathChooseKitArg",
+						"title": "语言文件路径",
+						"key": "from"
+					},
+					{
+						"type": "PathChooseKitArg",
+						"title": "导出的目录",
+						"key": "to"
+					},
+					{
+						"type": "InputTextArg",
+						"title": "模板",
+						"key": "template"
+					},
+					{
+						"type": "InputTextArg",
+						"title": "名称",
+						"key": "name"
+					}
+				]
+			},
+			"argsFormTemps": [
+				{
+					"meta": {
+						"name": "正常导出"
+					},
+					"args": [
+						{
+							"key": "from",
+							"value": "${PROJECT_DIR}/../local.xlsx"
+						},
+						{
+							"key": "to",
+							"value": "${PROJECT_DIR}/assets/resources/localization"
+						},
+						{
+							"key": "template",
+							"value": "template/splitlocal_json.razor"
+						},
+						{
+							"key": "name",
+							"value": "local_lang.json"
+						}
+					]
+				}
+
+			]
+		},
+		{
+			"meta": {
+				"name": "导出字符串表"
+			},
+			"args": {
+				"command": "node . splitlocal ",
+				"argumentList": [
+					{
+						"type": "PathChooseKitArg",
+						"title": "语言文件路径",
+						"key": "from"
+					},
+					{
+						"type": "PathChooseKitArg",
+						"title": "导出的目录",
+						"key": "to"
+					},
+					{
+						"type": "InputTextArg",
+						"title": "模板",
+						"key": "template"
+					},
+					{
+						"type": "InputTextArg",
+						"title": "名称",
+						"key": "name"
+					}
+				]
+			},
+			"argsFormTemps": [
+				{
+					"meta": {
+						"name": "正常导出"
+					},
+					"args": [
+						{
+							"key": "from",
+							"value": "${PROJECT_DIR}/../strings.xlsx"
+						},
+						{
+							"key": "to",
+							"value": "${PROJECT_DIR}/assets/resources/localization"
+						},
+						{
+							"key": "template",
+							"value": "template/splitlocal_ts.razor"
+						},
+						{
+							"key": "name",
+							"value": "strings_lang.ts"
+						}
+					]
+				}
+
+			]
+		}
+	]
+}
