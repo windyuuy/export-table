@@ -165,6 +165,14 @@ ${st(() =>
 	`
 	).join("")
 	)}
+
+	${cmm(/**生成get字段 */)}
+	#region get字段
+	${st(() => fields.map(f => 
+		`	public ${getFieldType(f.type)} ${f.describe.replace(" ","_")} => ${convMemberName(f.name)};`
+	).join("\n")
+	)}
+	#endregion
 }
 `
 

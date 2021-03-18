@@ -148,6 +148,11 @@ ${st(() => fields.map(f => `		this.${convMemberName(f.name)} = source.${convMemb
 	/// </summary>
 	public ${getFieldType(f.type)} ${convMemberName(f.name)};
 	`).join(""))}
+
+	${cmm( /**生成get字段 */)}
+	#region get字段
+	${st(() => fields.map(f => `	public ${getFieldType(f.type)} ${f.describe.replace(" ", "_")} => ${convMemberName(f.name)};`).join("\n"))}
+	#endregion
 }
 `;
     return temp;
