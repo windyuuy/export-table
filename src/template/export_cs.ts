@@ -139,8 +139,7 @@ ${st(() =>
 		)}
 	}
 
-
-	public ${RowClass} MergeFrom(${RowClass} source)
+	public virtual ${RowClass} MergeFrom(${RowClass} source)
 	{
 ${st(() =>
 	fields.map(f =>
@@ -150,7 +149,7 @@ ${st(() =>
 		return this;
 	}
 
-	public ${RowClass} Clone()
+	public virtual ${RowClass} Clone()
 	{
 		var config = new ${RowClass}();
 		config.MergeFrom(this);
@@ -158,14 +157,14 @@ ${st(() =>
 	}
 
 	${cmm(/**生成字段 */)}
-	${(() => fields.map(f=>`
+	${st(() => fields.map(f=>`
 	/// <summary>
 	/// ${f.describe}
 	/// </summary>
 	public ${getFieldType(f.type)} ${convMemberName(f.name)};
 	`
 	).join("")
-	)()}
+	)}
 }
 `
 

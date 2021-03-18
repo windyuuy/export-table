@@ -128,14 +128,13 @@ ${st(() => datas.map(data => `		new ${RowClass}(${st(() => fields.map((f, index)
 ${st(() => fields.map(f => `		this.${convMemberName(f.name)} = ${convVarName(f.name)};`).join("\n"))}
 	}
 
-
-	public ${RowClass} MergeFrom(${RowClass} source)
+	public virtual ${RowClass} MergeFrom(${RowClass} source)
 	{
 ${st(() => fields.map(f => `		this.${convMemberName(f.name)} = source.${convMemberName(f.name)};`).join("\n"))}
 		return this;
 	}
 
-	public ${RowClass} Clone()
+	public virtual ${RowClass} Clone()
 	{
 		var config = new ${RowClass}();
 		config.MergeFrom(this);
@@ -143,12 +142,12 @@ ${st(() => fields.map(f => `		this.${convMemberName(f.name)} = source.${convMemb
 	}
 
 	${cmm( /**生成字段 */)}
-	${(() => fields.map(f => `
+	${st(() => fields.map(f => `
 	/// <summary>
 	/// ${f.describe}
 	/// </summary>
 	public ${getFieldType(f.type)} ${convMemberName(f.name)};
-	`).join(""))()}
+	`).join(""))}
 }
 `;
     return temp;
