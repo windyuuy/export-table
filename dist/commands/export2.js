@@ -16,7 +16,7 @@ const pako = require("pako");
 const fs = require("fs");
 const path_1 = require("path");
 const export_cs_1 = require("../template/export_cs");
-exports.command = 'export2 <from> <to>';
+exports.command = 'export <from> <to>';
 exports.describe = '导出表格，可以每张表格单独导出，或是全部数据一起导出。';
 function builder(yargs) {
     return yargs

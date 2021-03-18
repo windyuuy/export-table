@@ -139,6 +139,24 @@ ${st(() =>
 		)}
 	}
 
+
+	public ${RowClass} MergeFrom(${RowClass} source)
+	{
+${st(() =>
+	fields.map(f =>
+		`		this.${convMemberName(f.name)} = source.${convMemberName(f.name)};`
+	).join("\n")
+)}
+		return this;
+	}
+
+	public ${RowClass} Clone()
+	{
+		var config = new ${RowClass}();
+		config.MergeFrom(this);
+		return config;
+	}
+
 	${cmm(/**生成字段 */)}
 	${(() => fields.map(f=>`
 	/// <summary>

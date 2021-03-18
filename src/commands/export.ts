@@ -6,7 +6,7 @@ import * as fs from "fs"
 import { join } from "path";
 import chalk from "chalk";
 
-export var command = 'export <from> <to>'
+export var command = 'export1 <from> <to>'
  
 export var describe = '导出表格，可以每张表格单独导出，或是全部数据一起导出。' 
  

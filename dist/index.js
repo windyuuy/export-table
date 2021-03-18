@@ -13,13 +13,13 @@ if (tokithelper_1.tokitHelper.launchOptions) {
     const curdir = `${tokithelper_1.tokitHelper.projectDir}`;
     const argv = tokithelper_1.tokitHelper.convToYargs(tokithelper_1.tokitHelper.launchOptions);
     let cmd = process.argv[2];
-    if (cmd == "export") {
+    if (cmd == "export1") {
         argv.alls = argv.alls.split(" ");
         argv.allnames = argv.allnames.split(" ");
         argv.inject = argv.inject.split(" ");
         exportCmd.handler(argv);
     }
-    else if (cmd == "export2") {
+    else if (cmd == "export") {
         argv.alls = argv.alls.split(" ");
         argv.allnames = argv.allnames.split(" ");
         argv.inject = argv.inject.split(" ");
