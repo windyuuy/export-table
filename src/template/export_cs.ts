@@ -38,6 +38,8 @@ export function export_cs(paras: ExportParams): string | null {
 	let firstLetterLower = function (str: string) {
 		return str.charAt(0).toLowerCase() + str.slice(1);
 	};
+	let convVarName = firstLetterUpper
+	
 	let RowClass = firstLetterUpper(name)
 	let initFunc = name + "Init"
 	let mapfield = fields.find(a => a.type == "key")//如果是map，则生成对应的map
@@ -127,11 +129,11 @@ ${st(() =>
 	};
 
 	public ${RowClass}() { }
-	public ${RowClass}(${st(() => fields.map(f => `${getFieldType(f.type)} ${f.name}`).join(", "))})
+	public ${RowClass}(${st(() => fields.map(f => `${getFieldType(f.type)} ${convVarName(f.name)}`).join(", "))})
 	{
 ${st(() =>
 			fields.map(f =>
-`		this.${f.name} = ${f.name};`
+`		this.${convVarName(f.name)} = ${convVarName(f.name)};`
 			).join("\n")
 		)}
 	}
@@ -141,7 +143,7 @@ ${st(() =>
 	/// <summary>
 	/// ${f.describe}
 	/// </summary>
-	public ${getFieldType(f.type)} ${firstLetterLower(f.name)};
+	public ${getFieldType(f.type)} ${convVarName(f.name)};
 	`
 	).join("")
 	)()}
