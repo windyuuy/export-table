@@ -6,6 +6,9 @@ export function cmm(a?:string){return ""}
 export function st(f:(a?:any)=>string){
 	return f()
 }
+export function foreach<T>(ls: T[],f:(e:T)=>string){
+	return ls.map(e=>f(e)).join("\n")
+}
 
 export type ExportParams = {
 	name: string
@@ -114,6 +117,14 @@ export function export_cs(paras: ExportParams): string | null {
 
 		throw new Error("invalid type <unkown>")
 	}
+	
+	const getTitle=(v:Field)=>{
+		return v.describe.split("\n")[0]
+	}
+
+	const getDescripts=(v:Field)=>{
+		return v.describe.split("\n")
+	}
 
 	let temp = `
 using System.Collections.Generic;
@@ -122,29 +133,23 @@ public class ${RowClass} {
 
 	public static List<${RowClass}> Configs = new List<${RowClass}>()
 	{
-${st(() => 
-			datas.map(data => 
+${foreach(datas, data =>
 `		new ${RowClass}(${st(() => fields.map((f, index) => genValue(data[index],f.type)).join(", "))}),`
-			).join("\n")
-		)}
+)}
 	};
 
 	public ${RowClass}() { }
 	public ${RowClass}(${st(() => fields.map(f => `${getFieldType(f.type)} ${convVarName(f.name)}`).join(", "))})
 	{
-${st(() =>
-			fields.map(f =>
+${foreach(fields, f =>
 `		this.${convMemberName(f.name)} = ${convVarName(f.name)};`
-			).join("\n")
-		)}
+)}
 	}
 
 	public virtual ${RowClass} MergeFrom(${RowClass} source)
 	{
-${st(() =>
-	fields.map(f =>
-		`		this.${convMemberName(f.name)} = source.${convMemberName(f.name)};`
-	).join("\n")
+${foreach(fields,f=>
+	`		this.${convMemberName(f.name)} = source.${convMemberName(f.name)};`
 )}
 		return this;
 	}
@@ -157,21 +162,20 @@ ${st(() =>
 	}
 
 	${cmm(/**生成字段 */)}
-	${st(() => fields.map(f=>`
+${foreach(fields, f =>`
 	/// <summary>
-	/// ${f.describe}
+${foreach(getDescripts(f), line => 
+	`	/// ${line}`
+)}
 	/// </summary>
-	public ${getFieldType(f.type)} ${convMemberName(f.name)};
-	`
-	).join("")
-	)}
+	public ${getFieldType(f.type)} ${convMemberName(f.name)};`
+)}
 
 	${cmm(/**生成get字段 */)}
 	#region get字段
-	${st(() => fields.map(f => 
-		`	public ${getFieldType(f.type)} ${f.describe.replace(" ","_")} => ${convMemberName(f.name)};`
-	).join("\n")
-	)}
+${foreach(fields, f =>
+		`	public ${getFieldType(f.type)} ${getTitle(f).replace(" ","_")} => ${convMemberName(f.name)};`
+)}
 	#endregion
 }
 `

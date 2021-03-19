@@ -1,12 +1,16 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.export_cs = exports.st = exports.cmm = void 0;
+exports.export_cs = exports.foreach = exports.st = exports.cmm = void 0;
 function cmm(a) { return ""; }
 exports.cmm = cmm;
 function st(f) {
     return f();
 }
 exports.st = st;
+function foreach(ls, f) {
+    return ls.map(e => f(e)).join("\n");
+}
+exports.foreach = foreach;
 function export_cs(paras) {
     let { datas, fields, inject, name, objects, packagename, tables, xxtea, } = paras;
     let firstLetterUpper = function (str) {
@@ -112,6 +116,12 @@ function export_cs(paras) {
         }
         throw new Error("invalid type <unkown>");
     };
+    const getTitle = (v) => {
+        return v.describe.split("\n")[0];
+    };
+    const getDescripts = (v) => {
+        return v.describe.split("\n");
+    };
     let temp = `
 using System.Collections.Generic;
 
@@ -119,18 +129,18 @@ public class ${RowClass} {
 
 	public static List<${RowClass}> Configs = new List<${RowClass}>()
 	{
-${st(() => datas.map(data => `		new ${RowClass}(${st(() => fields.map((f, index) => genValue(data[index], f.type)).join(", "))}),`).join("\n"))}
+${foreach(datas, data => `		new ${RowClass}(${st(() => fields.map((f, index) => genValue(data[index], f.type)).join(", "))}),`)}
 	};
 
 	public ${RowClass}() { }
 	public ${RowClass}(${st(() => fields.map(f => `${getFieldType(f.type)} ${convVarName(f.name)}`).join(", "))})
 	{
-${st(() => fields.map(f => `		this.${convMemberName(f.name)} = ${convVarName(f.name)};`).join("\n"))}
+${foreach(fields, f => `		this.${convMemberName(f.name)} = ${convVarName(f.name)};`)}
 	}
 
 	public virtual ${RowClass} MergeFrom(${RowClass} source)
 	{
-${st(() => fields.map(f => `		this.${convMemberName(f.name)} = source.${convMemberName(f.name)};`).join("\n"))}
+${foreach(fields, f => `		this.${convMemberName(f.name)} = source.${convMemberName(f.name)};`)}
 		return this;
 	}
 
@@ -142,16 +152,15 @@ ${st(() => fields.map(f => `		this.${convMemberName(f.name)} = source.${convMemb
 	}
 
 	${cmm( /**生成字段 */)}
-	${st(() => fields.map(f => `
+${foreach(fields, f => `
 	/// <summary>
-	/// ${f.describe}
+${foreach(getDescripts(f), line => `	/// ${line}`)}
 	/// </summary>
-	public ${getFieldType(f.type)} ${convMemberName(f.name)};
-	`).join(""))}
+	public ${getFieldType(f.type)} ${convMemberName(f.name)};`)}
 
 	${cmm( /**生成get字段 */)}
 	#region get字段
-	${st(() => fields.map(f => `	public ${getFieldType(f.type)} ${f.describe.replace(" ", "_")} => ${convMemberName(f.name)};`).join("\n"))}
+${foreach(fields, f => `	public ${getFieldType(f.type)} ${getTitle(f).replace(" ", "_")} => ${convMemberName(f.name)};`)}
 	#endregion
 }
 `;
