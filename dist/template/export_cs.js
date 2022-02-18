@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.export_stuff = exports.foreach = exports.st = exports.cmm = void 0;
+exports.ExportPlugin = exports.export_stuff = exports.foreach = exports.st = exports.cmm = void 0;
 function cmm(a) { return ""; }
 exports.cmm = cmm;
 function st(f) {
@@ -167,4 +167,10 @@ ${foreach(fields, f => `	public ${getFieldType(f.type)} ${getTitle(f).replace(" 
     return temp;
 }
 exports.export_stuff = export_stuff;
+class ExportPlugin {
+    cs(paras) {
+        return export_stuff(paras);
+    }
+}
+exports.ExportPlugin = ExportPlugin;
 //# sourceMappingURL=export_cs.js.map

@@ -3,6 +3,7 @@ import * as  xxtea from 'xxtea-node';
 import * as pako from "pako"
 import * as fs from "fs"
 import { join } from "path";
+import { IPlugin } from "../iplugin/IPlugin";
 
 export var command = 'export <from> <to>'
  
@@ -83,14 +84,28 @@ export async function handler(argv: any) {
                 packagename: packagename
             }
             // console.log(paras.datas)
-            // if(one=="cs")
-            const export_stuff = require("../template/export_cs").export_stuff
-            let result = export_stuff(paras)
-            if (result == null) {
-                return;
+            let ps = one!.split(":")
+            let cmd = ps[1]
+            let plugin = ps[0]
+            var ExportPlugin: (new () => IPlugin) | undefined
+            try {
+                ExportPlugin = require("export-table-pulgin-" + plugin).ExportPlugin as new () => IPlugin
+            } catch {
+                console.error(`plugin not found: <${plugin}>`)
+            }
+            if (ExportPlugin != undefined) {
+                const plugin = new ExportPlugin()
+                if (typeof ((plugin as any)[cmd]) == "function") {
+                    let result = (plugin as any)[cmd](paras)
+                    if (result != null) {
+                        fs.writeFileSync(join(to, onename.replace("name", table.name)), clearSpace(result));
+                    }
+                    return;
+                } else {
+                    console.error(`cmd not found: <${cmd}>`)
+                }
             }
             // console.log(join(to,onename.replace("name",table.name)));
-            fs.writeFileSync(join(to, onename.replace("name", table.name)), clearSpace(result));
         }
     }
 

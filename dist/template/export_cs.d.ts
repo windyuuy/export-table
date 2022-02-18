@@ -1,3 +1,4 @@
+import { IPlugin } from "../iplugin/IPlugin";
 import DataTable from "../table/DataTable";
 import { Field } from "../table/DataTable";
 export declare function cmm(a?: string): string;
@@ -16,3 +17,6 @@ export declare type ExportParams = {
     packagename: string | undefined;
 };
 export declare function export_stuff(paras: ExportParams): string | null;
+export declare class ExportPlugin implements IPlugin {
+    cs(paras: ExportParams): string | null;
+}

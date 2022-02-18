@@ -1,9 +1,15 @@
 #!/usr/bin/env node
 
 import * as yargs from "yargs"
-
 import * as exportCmd from "./commands/export"
 import { tokitHelper } from "./tokithelper";
+
+export * from "./table/Cell"
+export * from "./table/DataTable"
+export * from "./table/Sheet"
+export * from "./table/Workbook"
+export * from "./table/WorkbookManager"
+export * from "./iplugin/IPlugin"
 
 if (tokitHelper.launchOptions) {
 	const curdir = `${tokitHelper.projectDir}`

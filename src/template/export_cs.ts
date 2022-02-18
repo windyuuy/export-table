@@ -1,4 +1,5 @@
 
+import { IPlugin } from "../iplugin/IPlugin";
 import DataTable from "../table/DataTable";
 import { Field } from "../table/DataTable";
 
@@ -182,4 +183,10 @@ ${foreach(fields, f =>
 
 	return temp
 
+}
+
+export class ExportPlugin implements IPlugin {
+	cs(paras: ExportParams): string | null {
+		return export_stuff(paras)
+	}
 }

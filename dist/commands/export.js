@@ -89,14 +89,30 @@ function handler(argv) {
                     packagename: packagename
                 };
                 // console.log(paras.datas)
-                // if(one=="cs")
-                const export_stuff = require("../template/export_cs").export_stuff;
-                let result = export_stuff(paras);
-                if (result == null) {
-                    return;
+                let ps = one.split(":");
+                let cmd = ps[1];
+                let plugin = ps[0];
+                var ExportPlugin;
+                try {
+                    ExportPlugin = require("export-table-pulgin-" + plugin).ExportPlugin;
+                }
+                catch (_a) {
+                    console.error(`plugin not found: <${plugin}>`);
+                }
+                if (ExportPlugin != undefined) {
+                    const plugin = new ExportPlugin();
+                    if (typeof (plugin[cmd]) == "function") {
+                        let result = plugin[cmd](paras);
+                        if (result != null) {
+                            fs.writeFileSync((0, path_1.join)(to, onename.replace("name", table.name)), clearSpace(result));
+                        }
+                        return;
+                    }
+                    else {
+                        console.error(`cmd not found: <${cmd}>`);
+                    }
                 }
                 // console.log(join(to,onename.replace("name",table.name)));
-                fs.writeFileSync((0, path_1.join)(to, onename.replace("name", table.name)), clearSpace(result));
             }
         }
     });
