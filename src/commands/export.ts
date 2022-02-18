@@ -1,9 +1,10 @@
 import { WorkbookManager } from "../table/WorkbookManager";
 import * as  xxtea from 'xxtea-node';
 import * as pako from "pako"
-import * as fs from "fs"
 import { join } from "path";
 import { IPlugin } from "../iplugin/IPlugin";
+import { HandleSheetParams } from "..";
+import { HandleBatchParams } from "../iplugin/HandleBatchParams";
 
 export var command = 'export <from> <to>'
  
@@ -34,9 +35,6 @@ function encrypt(str:string,key:string,deflate:boolean){
     }
 }
 
-function clearSpace(value:string){
-    return value.replace(/^(\r|\n|\t| )+$/gm,"");
-}
 function firstLetterUpper(str:string){
     return str.charAt(0).toUpperCase()+str.slice(1);
 };
@@ -66,47 +64,67 @@ export async function handler(argv: any) {
     await workbookManager.build(from);//加载所有表
     workbookManager.checkError();
 
+
+    let ps = one!.split(":")
+    let tag = ps[1]
+
+    let plugin = ps[0]
+    let exportPlugins: IPlugin[] | undefined
+    try {
+        exportPlugins = require("export-table-pulgin-" + plugin).ExportPlugins as IPlugin[]
+    } catch {
+        console.error(`plugin not found: <${plugin}>`)
+        return;
+    }
+    exportPlugins = exportPlugins ?? []
+    let matchedPlugins = exportPlugins
+        .filter(p => p.tags.indexOf(tag) >= 0)
+
     {
+
         //导出每张表
-        for (let table of workbookManager.dataTables) {
+        console.log(`handle sheets begin`)
+
+        let tables = workbookManager.dataTables
+        for (let table of tables) {
             if (tableNameFirstLetterUpper) {
                 table.name = firstLetterUpper(table.name);
             }
-            console.log(table.name)
-            let paras = {
-                name: table.name,
-                tables: workbookManager.dataTables,
-                fields: table.fields!.filter(a => a.skip == false),
-                datas: table.getDataList(),
-                objects: table.getObjectList(),
-                xxtea: encrypt,
-                inject: injectMap,
-                packagename: packagename
-            }
-            // console.log(paras.datas)
-            let ps = one!.split(":")
-            let cmd = ps[1]
-            let plugin = ps[0]
-            var ExportPlugin: (new () => IPlugin) | undefined
-            try {
-                ExportPlugin = require("export-table-pulgin-" + plugin).ExportPlugin as new () => IPlugin
-            } catch {
-                console.error(`plugin not found: <${plugin}>`)
-            }
-            if (ExportPlugin != undefined) {
-                const plugin = new ExportPlugin()
-                if (typeof ((plugin as any)[cmd]) == "function") {
-                    let result = (plugin as any)[cmd](paras)
-                    if (result != null) {
-                        fs.writeFileSync(join(to, onename.replace("name", table.name)), clearSpace(result));
-                    }
-                    return;
-                } else {
-                    console.error(`cmd not found: <${cmd}>`)
+            if (matchedPlugins.length > 0) {
+                console.log(`handle sheet ${table.name}:`)
+                let paras: HandleSheetParams = {
+                    name: table.name,
+                    tables: tables,
+                    fields: table.fields!.filter(a => a.skip == false),
+                    datas: table.getDataList(),
+                    objects: table.getObjectList(),
+                    xxtea: encrypt,
+                    inject: injectMap,
+                    packagename: packagename,
+                    outFilePath: join(to, onename.replace("name", table.name)),
                 }
+                matchedPlugins.forEach(plugin => {
+                    console.log(`- handle sheet ${table.name} with ${plugin.name}`)
+                    plugin.handleSheet(paras)
+                })
             }
-            // console.log(join(to,onename.replace("name",table.name)));
         }
+        console.log(`handle sheets end`)
+    }
+
+    {
+        let paras: HandleBatchParams = {
+            workbookManager: workbookManager,
+            xxtea: encrypt,
+            inject: injectMap,
+            packagename: packagename,
+            outPath: to,
+        }
+        console.log(`handle batch begin`)
+        matchedPlugins.forEach(plugin => {
+            plugin.handleBatch(paras)
+        })
+        console.log(`handle batch done`)
     }
 
 }

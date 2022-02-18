@@ -2,7 +2,7 @@ import { DataTable } from "..";
 import { Field } from "../table/Field";
 
 
-export type ExportParams = {
+export type HandleSheetParams = {
 	name: string;
 	tables: DataTable[];
 	fields: Field[];
@@ -13,4 +13,5 @@ export type ExportParams = {
 		[key: string]: boolean;
 	};
 	packagename: string | undefined;
+	outFilePath: string
 };

@@ -9,7 +9,11 @@ export function foreach<T>(ls: T[], f: (e: T) => string) {
 
 export function makeFirstLetterUpper(str: string) {
 	return str.charAt(0).toUpperCase() + str.slice(1);
-};
+}
 export function makeFirstLetterLower(str: string) {
 	return str.charAt(0).toLowerCase() + str.slice(1);
-};
+}
+
+export function clearSpace(value: string) {
+	return value.replace(/^(\r|\n|\t| )+$/gm, "");
+}
