@@ -89,13 +89,13 @@ class Workbook {
      * 文件名，包含扩展名
      */
     get filename() {
-        return path_1.basename(this.filepath);
+        return (0, path_1.basename)(this.filepath);
     }
     /**
      * 工作簿名称，不包含扩展名
      */
     get name() {
-        return path_1.basename(this.filepath, ".xlsx");
+        return (0, path_1.basename)(this.filepath, ".xlsx");
     }
 }
 exports.default = Workbook;

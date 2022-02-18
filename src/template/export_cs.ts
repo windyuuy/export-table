@@ -23,7 +23,7 @@ export type ExportParams = {
 	packagename: string | undefined
 }
 
-export function export_cs(paras: ExportParams): string | null {
+export function export_stuff(paras: ExportParams): string | null {
 	let {
 		datas,
 		fields,

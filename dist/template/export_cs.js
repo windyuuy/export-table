@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.export_cs = exports.foreach = exports.st = exports.cmm = void 0;
+exports.export_stuff = exports.foreach = exports.st = exports.cmm = void 0;
 function cmm(a) { return ""; }
 exports.cmm = cmm;
 function st(f) {
@@ -11,7 +11,7 @@ function foreach(ls, f) {
     return ls.map(e => f(e)).join("\n");
 }
 exports.foreach = foreach;
-function export_cs(paras) {
+function export_stuff(paras) {
     let { datas, fields, inject, name, objects, packagename, tables, xxtea, } = paras;
     let firstLetterUpper = function (str) {
         return str.charAt(0).toUpperCase() + str.slice(1);
@@ -166,5 +166,5 @@ ${foreach(fields, f => `	public ${getFieldType(f.type)} ${getTitle(f).replace(" 
 `;
     return temp;
 }
-exports.export_cs = export_cs;
+exports.export_stuff = export_stuff;
 //# sourceMappingURL=export_cs.js.map
