@@ -1,6 +1,6 @@
-import Workbook from "./Workbook";
-import DataTable from "./DataTable";
-export default class WorkbookManager {
+import { Workbook } from "./Workbook";
+import { DataTable } from "./DataTable";
+export declare class WorkbookManager {
     protected _list: Workbook[];
     protected _tables: DataTable[] | null;
     constructor();

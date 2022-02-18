@@ -2,6 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.tokitHelper = exports.TokitHelper = void 0;
 class TokitHelper {
+    launchData;
+    launchOptions;
     constructor() {
         this.launchData = process.env['LAUNCH_OPTIOINS'];
         this.launchOptions = this.getLaunchOptioins(this.launchData);

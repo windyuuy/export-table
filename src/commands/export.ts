@@ -1,4 +1,4 @@
-import WorkbookManager from "../table/WorkbookManager";
+import { WorkbookManager } from "../table/WorkbookManager";
 import * as  xxtea from 'xxtea-node';
 import * as pako from "pako"
 import * as fs from "fs"

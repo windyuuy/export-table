@@ -1,5 +1,5 @@
-import Cell from "./Cell";
-export default class Sheet {
+import { Cell } from "./Cell";
+export declare class Sheet {
     name: string;
     data: Cell[][];
     get rowLength(): number;

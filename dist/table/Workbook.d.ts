@@ -1,6 +1,6 @@
 /// <reference types="node" />
-import Sheet from "./Sheet";
-export default class Workbook {
+import { Sheet } from "./Sheet";
+export declare class Workbook {
     /**
      * 文件路径
      */

@@ -1,10 +1,10 @@
 import { basename } from "path";
-import Sheet from "./Sheet";
+import { Sheet } from "./Sheet";
 import * as xlsx from "xlsx-color"
 import bufferFrom = require("buffer-from");
 
 
-export default class Workbook{
+export class Workbook {
 
     /**
      * 文件路径

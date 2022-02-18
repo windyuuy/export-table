@@ -1,4 +1,4 @@
-import Cell from "./Cell";
+import { Cell } from "./Cell";
 
 import * as xlsx from "xlsx-color"
 
@@ -16,7 +16,7 @@ const buildExcelDate = (value:any, is1904?:boolean) => {
 };
 
 
-export default class Sheet{
+export class Sheet {
     name:string="Sheet1"
     data:Cell[][]=[];
 

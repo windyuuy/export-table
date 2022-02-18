@@ -1,38 +1,13 @@
-import Sheet from "./Sheet";
-import WorkbookManager from "./WorkbookManager";
+import { Sheet } from "./Sheet";
+import { WorkbookManager } from "./WorkbookManager";
 import chalk from "chalk";
-import Cell from "./Cell";
-
-type FiledType="any"|"uid"|"number"|"number[]"|"bool"|"bool[]"|"string"|"object"|"object[]"|"fk"|"string*"|"string[]"|"key"|"fk[]"
-
-export class Field{
-    
-    /**
-     * 是否跳过该字段
-     */
-    skip:boolean=false
-
-    name:string
-    describe:string
-    type:FiledType
-
-    //外键
-    fkTableName:string|undefined
-    fkFieldName:string|undefined
-
-    //翻译
-    translate:boolean=false;
-    constructor(name:string,describe:string,type:FiledType){
-        this.name=name
-        this.describe=describe
-        this.type=type
-    }
-}
+import { Cell } from "./Cell";
+import { Field } from "./Field";
 
 /**
  * 专门处理普通数据表,可设定字段类型，添加移除对象等功能
  */
-export default class DataTable{
+export class DataTable {
 
     manager:WorkbookManager|null=null;
 

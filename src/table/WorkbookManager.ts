@@ -1,9 +1,9 @@
 import * as fs from "fs"
 import * as path from "path"
-import Workbook from "./Workbook";
-import DataTable from "./DataTable";
+import { Workbook } from "./Workbook";
+import { DataTable } from "./DataTable";
 import chalk from "chalk";
-export default class WorkbookManager{
+export class WorkbookManager {
 
     protected _list:Workbook[]=[];
     protected _tables:DataTable[]|null=null;

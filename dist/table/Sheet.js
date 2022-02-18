@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Sheet = void 0;
 const Cell_1 = require("./Cell");
 const xlsx = require("xlsx-color");
 const isBoolean = (maybeBoolean) => typeof maybeBoolean === 'boolean';
@@ -13,10 +14,8 @@ const buildExcelDate = (value, is1904) => {
     return (epoch - originDate) / (864e5);
 };
 class Sheet {
-    constructor() {
-        this.name = "Sheet1";
-        this.data = [];
-    }
+    name = "Sheet1";
+    data = [];
     get rowLength() {
         return this.data.length;
     }
@@ -112,7 +111,7 @@ class Sheet {
         }
         let c = r[colum];
         if (c == null) {
-            c = r[colum] = new Cell_1.default; //创建新的单元
+            c = r[colum] = new Cell_1.Cell; //创建新的单元
         }
         c.value = value;
     }
@@ -123,7 +122,7 @@ class Sheet {
         }
         let c = r[colum];
         if (c == null) {
-            c = r[colum] = new Cell_1.default; //创建新的单元
+            c = r[colum] = new Cell_1.Cell; //创建新的单元
         }
         c.color = color;
     }
@@ -134,7 +133,7 @@ class Sheet {
         }
         let c = r[colum];
         if (c == null) {
-            c = r[colum] = new Cell_1.default; //创建新的单元
+            c = r[colum] = new Cell_1.Cell; //创建新的单元
         }
         c.background = color;
     }
@@ -145,7 +144,7 @@ class Sheet {
         }
         let c = r[colum];
         if (c == null) {
-            c = r[colum] = new Cell_1.default; //创建新的单元
+            c = r[colum] = new Cell_1.Cell; //创建新的单元
         }
         c.describe = describe;
     }
@@ -238,5 +237,5 @@ class Sheet {
         return workSheet;
     }
 }
-exports.default = Sheet;
+exports.Sheet = Sheet;
 //# sourceMappingURL=Sheet.js.map

@@ -1,25 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Field = void 0;
+exports.DataTable = void 0;
 const chalk_1 = require("chalk");
-class Field {
-    constructor(name, describe, type) {
-        /**
-         * 是否跳过该字段
-         */
-        this.skip = false;
-        //翻译
-        this.translate = false;
-        this.name = name;
-        this.describe = describe;
-        this.type = type;
-    }
-}
-exports.Field = Field;
+const Field_1 = require("./Field");
 /**
  * 专门处理普通数据表,可设定字段类型，添加移除对象等功能
  */
 class DataTable {
+    sheet;
+    name;
+    manager = null;
     constructor(
     /**
      * 当前操作的数据页
@@ -31,7 +21,6 @@ class DataTable {
     name) {
         this.sheet = sheet;
         this.name = name;
-        this.manager = null;
     }
     isNullCell(cell) {
         if (cell == null || cell.value == null || String(cell.value).trim() == "") {
@@ -60,7 +49,7 @@ class DataTable {
             let fkFieldName;
             let translate = false;
             if (type === "") {
-                let skip = new Field(name || des, des || name, "any");
+                let skip = new Field_1.Field(name || des, des || name, "any");
                 skip.skip = true;
                 fieldList.push(skip);
                 continue;
@@ -99,7 +88,7 @@ class DataTable {
                 //不支持的类型
                 type = "any";
             }
-            let field = new Field(name, des, type.toLocaleLowerCase());
+            let field = new Field_1.Field(name, des, type.toLocaleLowerCase());
             field.fkTableName = fkTableName;
             field.fkFieldName = fkFieldName;
             field.translate = translate;
@@ -426,5 +415,5 @@ class DataTable {
         return result;
     }
 }
-exports.default = DataTable;
+exports.DataTable = DataTable;
 //# sourceMappingURL=DataTable.js.map

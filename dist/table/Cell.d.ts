@@ -1,4 +1,4 @@
-export default class Cell {
+export declare class Cell {
     /**
      * 单元格的值
      */

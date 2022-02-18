@@ -1,16 +1,17 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Workbook = void 0;
 const path_1 = require("path");
 const Sheet_1 = require("./Sheet");
 const xlsx = require("xlsx-color");
 const bufferFrom = require("buffer-from");
 class Workbook {
+    /**
+     * 文件路径
+     */
+    filepath = "";
+    sheets = [];
     constructor() {
-        /**
-         * 文件路径
-         */
-        this.filepath = "";
-        this.sheets = [];
     }
     /**
      * 根据表格名称获取表格
@@ -47,7 +48,7 @@ class Workbook {
         let names = Object.keys(workSheet.Sheets);
         for (let name of names) {
             const sheet = workSheet.Sheets[name];
-            let s = new Sheet_1.default();
+            let s = new Sheet_1.Sheet();
             s.name = name;
             let data = xlsx.utils.sheet_to_json(sheet, { header: 1, raw: true });
             for (let rowIndex = 0; rowIndex < data.length; rowIndex++) {
@@ -98,5 +99,5 @@ class Workbook {
         return (0, path_1.basename)(this.filepath, ".xlsx");
     }
 }
-exports.default = Workbook;
+exports.Workbook = Workbook;
 //# sourceMappingURL=Workbook.js.map
