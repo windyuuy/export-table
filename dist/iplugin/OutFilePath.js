@@ -23,6 +23,9 @@ class OutFilePath {
         this.baseName = baseName;
         this.ext = ext;
     }
+    /**
+     * 完整路径
+     */
     get fullPath() {
         return path.join(this.outPath, this.baseName + this.ext);
     }

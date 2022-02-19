@@ -11,7 +11,7 @@ function stdtemp(s) {
 }
 exports.stdtemp = stdtemp;
 /**
- * 注解
+ * 注释
  * @param a
  * @returns
  */
@@ -49,10 +49,20 @@ function foreach(ls, f, sign = "\n", autoTrim = true) {
     return line;
 }
 exports.foreach = foreach;
+/**
+ * 首字母大写
+ * @param str
+ * @returns
+ */
 function makeFirstLetterUpper(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 exports.makeFirstLetterUpper = makeFirstLetterUpper;
+/**
+ * 首字母小写
+ * @param str
+ * @returns
+ */
 function makeFirstLetterLower(str) {
     return str.charAt(0).toLowerCase() + str.slice(1);
 }

@@ -9,7 +9,7 @@ export function stdtemp(s: string): string {
 }
 
 /**
- * 注解
+ * 注释
  * @param a 
  * @returns 
  */
@@ -45,9 +45,19 @@ export function foreach<T>(ls: T[], f: (e: T) => string, sign: string = "\n", au
 	return line
 }
 
+/**
+ * 首字母大写
+ * @param str 
+ * @returns 
+ */
 export function makeFirstLetterUpper(str: string) {
 	return str.charAt(0).toUpperCase() + str.slice(1);
 }
+/**
+ * 首字母小写
+ * @param str 
+ * @returns 
+ */
 export function makeFirstLetterLower(str: string) {
 	return str.charAt(0).toLowerCase() + str.slice(1);
 }

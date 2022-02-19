@@ -2,10 +2,25 @@ import { DataTable, WorkbookManager } from "..";
 import { Field } from "../table/Field";
 import { OutFilePath } from "./OutFilePath";
 export declare type HandleSheetParams = {
+    /**
+     * 当前sheet名
+     */
     name: string;
+    /**
+     * 当前处理中的所有表
+     */
     tables: DataTable[];
+    /**
+     * 工作簿管理器
+     */
     workbookManager: WorkbookManager;
+    /**
+     * 当前sheet包装类
+     */
     table: DataTable;
+    /**
+     * 所有字段定义
+     */
     fields: Field[];
     /**
      * sheet 中所有数据
@@ -21,7 +36,16 @@ export declare type HandleSheetParams = {
     inject: {
         [key: string]: boolean;
     };
+    /**
+     * 包名
+     */
     packagename: string | undefined;
+    /**
+     * 导出路径
+     */
     outPath: string;
+    /**
+     * 文件导出路径
+     */
     outFilePath: OutFilePath;
 };

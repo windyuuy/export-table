@@ -24,6 +24,9 @@ export declare class OutFilePath {
      * 扩展名
      */
     ext: string);
+    /**
+     * 完整路径
+     */
     get fullPath(): string;
     merge(out: OutFilePath): this;
     clone(): OutFilePath;

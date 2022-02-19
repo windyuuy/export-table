@@ -18,6 +18,9 @@ export class OutFilePath {
 	) {
 	}
 
+	/**
+	 * 完整路径
+	 */
 	get fullPath() {
 		return path.join(this.outPath, this.baseName + this.ext)
 	}

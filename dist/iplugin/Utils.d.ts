@@ -5,7 +5,7 @@
  */
 export declare function stdtemp(s: string): string;
 /**
- * 注解
+ * 注释
  * @param a
  * @returns
  */
@@ -24,6 +24,16 @@ export declare function st(f: (a?: any) => string): string;
  * @returns
  */
 export declare function foreach<T>(ls: T[], f: (e: T) => string, sign?: string, autoTrim?: boolean): string;
+/**
+ * 首字母大写
+ * @param str
+ * @returns
+ */
 export declare function makeFirstLetterUpper(str: string): string;
+/**
+ * 首字母小写
+ * @param str
+ * @returns
+ */
 export declare function makeFirstLetterLower(str: string): string;
 export declare function clearSpace(value: string): string;
