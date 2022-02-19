@@ -1,10 +1,48 @@
 
+/**
+ * 标准模板文本
+ * @param s 
+ * @returns 
+ */
+export function stdtemp(s: string): string {
+	return s
+}
+
+/**
+ * 注解
+ * @param a 
+ * @returns 
+ */
 export function cmm(a?: string) { return "" }
+/**
+ * 表达式
+ * @param f 
+ * @returns 
+ */
 export function st(f: (a?: any) => string) {
 	return f()
 }
-export function foreach<T>(ls: T[], f: (e: T) => string) {
-	return ls.map(e => f(e)).join("\n")
+/**
+ * 遍历列表生成字符串
+ * - 会自动去除头尾多余的换行符(LF)
+ * @param ls 
+ * @param f 
+ * @returns 
+ */
+export function foreach<T>(ls: T[], f: (e: T) => string, sign: string = "\n", autoTrim = true) {
+	let line = ls.map(e => {
+		let sl = f(e)
+		if (autoTrim) {
+			if (sl.startsWith("\n")) {
+				sl = sl.substring(1)
+			}
+			if (sl.endsWith("\n")) {
+				sl = sl.substring(0, sl.length - 1)
+			}
+		}
+		return sl
+	}).join(sign)
+	return line
 }
 
 export function makeFirstLetterUpper(str: string) {

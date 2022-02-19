@@ -25,19 +25,28 @@ export declare class DataTable {
      */
     name: string);
     isNullCell(cell: Cell | null): boolean;
+    protected getFields(): Field[] | null;
+    protected _fields: Field[] | null;
     /**
      * 获取当前表中的字段列表
      */
     get fields(): Field[] | null;
     protected getNewData(field: Field, data: any, lineNumber: number): any;
+    protected _dataList: any[][] | undefined;
+    get dataList(): any[][];
     /**
      * 获取所有的数据列表
      */
     getDataList(): any[][];
+    convDataToObject(data: any[], fieldList: Field[]): any;
     /**
      * 获取经过转换的对象
      */
     getObjectList(): any[];
+    getRowData(key: any, field: Field): any[] | undefined;
+    getField(name: string): Field | undefined;
+    getFKObject<T = any>(fkRefer: any, field: Field): T | undefined;
+    getFKData<T = any[]>(fkRefer: any, field: Field): T | undefined;
     /**
      * 检查表格格式是否错误
     */

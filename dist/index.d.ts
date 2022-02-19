@@ -7,6 +7,7 @@ export * from "./table/Workbook";
 export * from "./table/WorkbookManager";
 export * from "./iplugin/IPlugin";
 export * from "./iplugin/PluginBase";
+export * from "./iplugin/OutFilePath";
 export * from "./iplugin/HandleSheetParams";
 export * from "./iplugin/HandleBatchParams";
 export * from "./iplugin/Utils";

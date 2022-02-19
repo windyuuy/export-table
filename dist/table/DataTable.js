@@ -3,6 +3,25 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.DataTable = void 0;
 const chalk_1 = require("chalk");
 const Field_1 = require("./Field");
+const toTypeValue = (v, t) => {
+    if (typeof (v) != t) {
+        if (t == "string") {
+            return `${v}`;
+        }
+        else if (t == "number") {
+            return parseFloat(v);
+        }
+        else if (t == "boolean") {
+            return !!v;
+        }
+        else {
+            return v;
+        }
+    }
+    else {
+        return v;
+    }
+};
 /**
  * 专门处理普通数据表,可设定字段类型，添加移除对象等功能
  */
@@ -28,10 +47,7 @@ class DataTable {
         }
         return false;
     }
-    /**
-     * 获取当前表中的字段列表
-     */
-    get fields() {
+    getFields() {
         let fieldList = [];
         for (let i = 0; i < this.sheet.data[1].length; i++) {
             //第一行 注释
@@ -51,6 +67,7 @@ class DataTable {
             if (type === "") {
                 let skip = new Field_1.Field(name || des, des || name, "any");
                 skip.skip = true;
+                skip.index = i;
                 fieldList.push(skip);
                 continue;
             }
@@ -95,9 +112,17 @@ class DataTable {
             if (this.sheet.data[0][i].describe) {
                 field.describe += "\n" + this.sheet.data[0][i].describe; //添加备注
             }
+            field.index = i;
             fieldList.push(field);
         }
         return fieldList;
+    }
+    _fields = null;
+    /**
+     * 获取当前表中的字段列表
+     */
+    get fields() {
+        return this._fields ?? (this._fields = this.getFields());
     }
     getNewData(field, data, lineNumber) {
         if (field.type == "any") {
@@ -108,7 +133,7 @@ class DataTable {
             let newValue = parseInt(data);
             if (isNaN(newValue)) {
                 newValue = 0;
-                console.error(chalk_1.default.red(`表${this.name} 行${lineNumber} 字段${field.name} uid类型值填写错误 ${data}`));
+                console.error(chalk_1.default.red(`表${this.name} 行${lineNumber} 字段<${field.name}> uid类型值填写错误 ${data}`));
             }
             return newValue;
         }
@@ -118,7 +143,7 @@ class DataTable {
             let newValue = parseFloat(data);
             if (isNaN(newValue)) {
                 newValue = 0;
-                console.error(chalk_1.default.red(`表${this.name} 行${lineNumber} 字段${field.name} number类型值填写错误 ${data}`));
+                console.error(chalk_1.default.red(`表${this.name} 行${lineNumber} 字段<${field.name}> number类型值填写错误 ${data}`));
             }
             return newValue;
         }
@@ -136,7 +161,7 @@ class DataTable {
                     let v = parseFloat(list[i]);
                     if (isNaN(v)) {
                         v = 0;
-                        console.error(chalk_1.default.red(`表${this.name} 行${lineNumber} 字段${field.name} number[]类型值填写错误 ${data}`));
+                        console.error(chalk_1.default.red(`表${this.name} 行${lineNumber} 字段<${field.name}> number[]类型值填写错误 ${data}`));
                     }
                     result.push(v);
                 }
@@ -213,7 +238,7 @@ class DataTable {
                 return [];
             }
             else {
-                console.error(chalk_1.default.red(`表${this.name} 行${lineNumber} 字段${field.name} string[]类型值填写错误 ${data}`));
+                console.error(chalk_1.default.red(`表${this.name} 行${lineNumber} 字段<${field.name}> string[]类型值填写错误 ${data}`));
                 return [];
             }
         }
@@ -229,7 +254,7 @@ class DataTable {
                 return json;
             }
             catch (e) {
-                console.error(chalk_1.default.red(`表${this.name} 行${lineNumber} 字段${field.name} object类型值填写错误 ${data}`));
+                console.error(chalk_1.default.red(`表${this.name} 行${lineNumber} 字段<${field.name}> object类型值填写错误 ${data}`));
                 return String(data);
             }
         }
@@ -245,7 +270,7 @@ class DataTable {
                 return json;
             }
             catch (e) {
-                console.error(chalk_1.default.red(`表${this.name} 行${lineNumber} 字段${field.name} object[]类型值填写错误 ${data}`));
+                console.error(chalk_1.default.red(`表${this.name} 行${lineNumber} 字段<${field.name}> object[]类型值填写错误 ${data}`));
                 return [];
             }
         }
@@ -254,7 +279,7 @@ class DataTable {
                 data = -1;
             }
             else if (isNaN(parseInt(data))) {
-                console.error(chalk_1.default.red(`表${this.name} 行${lineNumber} 字段${field.name} fk类型值填写错误 ${data}`));
+                console.error(chalk_1.default.red(`表${this.name} 行${lineNumber} 字段<${field.name}> fk类型值填写错误 ${data}`));
             }
             return data;
         }
@@ -275,11 +300,17 @@ class DataTable {
                 let list = data.split(/,|;/);
                 let result = [];
                 for (let i = 0; i < list.length; i++) {
-                    let v = parseFloat(list[i]);
-                    if (isNaN(v)) {
-                        v = 0;
-                        console.error(chalk_1.default.red(`表${this.name} 行${lineNumber} 字段${field.name} number[]类型值填写错误 ${data}`));
-                    }
+                    let v;
+                    // if (isNaN(list[i])) {
+                    v = list[i];
+                    // } else {
+                    //     let vn = parseFloat(list[i])
+                    //     if (isNaN(vn)) {
+                    //         vn = 0
+                    //         console.error(chalk.red(`表${this.name} 行${lineNumber} 字段<${field.name}> number[]类型值填写错误 ${data}`))
+                    //     }
+                    //     v = vn
+                    // }
                     result.push(v);
                 }
                 return result;
@@ -288,6 +319,10 @@ class DataTable {
                 return [];
             }
         }
+    }
+    _dataList;
+    get dataList() {
+        return this._dataList ?? (this._dataList = this.getDataList());
     }
     /**
      * 获取所有的数据列表
@@ -306,12 +341,22 @@ class DataTable {
             for (let l = 0; l < fieldList.length; l++) {
                 let data = lineData[l];
                 let field = fieldList[l];
-                if (field && field.skip == false)
-                    line.push(this.getNewData(field, data && data.value, i + 1));
+                if (field && field.skip == false) {
+                    let v = this.getNewData(field, data && data.value, i + 1);
+                    line.push(v);
+                }
             }
             data.push(line);
         }
         return data;
+    }
+    convDataToObject(data, fieldList) {
+        let obj = {};
+        for (let i = 0; i < fieldList.length; i++) {
+            let f = fieldList[i];
+            obj[f.name] = data[i];
+        }
+        return obj;
     }
     /**
      * 获取经过转换的对象
@@ -324,14 +369,77 @@ class DataTable {
         let dataList = this.getDataList();
         let objList = [];
         for (let data of dataList) {
-            let obj = {};
-            for (let i = 0; i < fieldList.length; i++) {
-                let f = fieldList[i];
-                obj[f.name] = data[i];
-            }
+            let obj = this.convDataToObject(data, fieldList);
             objList.push(obj);
         }
         return objList;
+    }
+    getRowData(key, field) {
+        let fieldIndex = field.index;
+        let realKey = toTypeValue(key, field.type);
+        let data = this.dataList.find(d => d[fieldIndex] == realKey);
+        return data;
+    }
+    getField(name) {
+        let field = this.fields?.find(f => f.name == name);
+        return field;
+    }
+    getFKObject(fkRefer, field) {
+        let data = this.getFKData(fkRefer, field);
+        if (data !== undefined) {
+            if (field.type == "fk") {
+                let fkTable = this.manager.getTableByName(field.fkTableName);
+                let obj = this.convDataToObject(data, fkTable.fields);
+                return obj;
+            }
+            else if (field.type == "fk[]") {
+                let fkTable = this.manager.getTableByName(field.fkTableName);
+                let objs = data.map(d => this.convDataToObject(d, fkTable.fields));
+                return objs;
+            }
+            else {
+                throw new Error("unknown case");
+            }
+        }
+        return undefined;
+    }
+    getFKData(fkRefer, field) {
+        if (field.type == "fk") {
+            //外键检查
+            let fkTable = this.manager.getTableByName(field.fkTableName);
+            if (fkTable == null) {
+                console.error(chalk_1.default.red(`表${this.name} 字段<${field.name}> 无法找到外键表 ${field.fkTableName}`));
+                return undefined;
+            }
+            let fkField = fkTable.getField(field.fkFieldName);
+            if (fkField == null) {
+                console.error(chalk_1.default.red(`表${this.name} 字段<${field.name}> 无法找到外键 ${field.fkTableName}:${field.fkFieldName}`));
+                return undefined;
+            }
+            let fkData = fkTable.getRowData(fkRefer, fkField);
+            return fkData;
+        }
+        else if (field.type == "fk[]") {
+            //外键数组
+            let fkTable = this.manager.getTableByName(field.fkTableName);
+            if (fkTable == null) {
+                console.error(chalk_1.default.red(`表${this.name} 字段<${field.name}> 无法找到外键表 ${field.fkTableName}`));
+                return undefined;
+            }
+            let fkField = fkTable.getField(field.fkFieldName);
+            if (fkField == null) {
+                console.error(chalk_1.default.red(`表${this.name} 字段<${field.name}> 无法找到外键 ${field.fkTableName}:${field.fkFieldName}`));
+                return undefined;
+            }
+            let fkDatas = fkRefer.map(fkR => {
+                let fkData = fkTable.getRowData(fkR, fkField);
+                return fkData;
+            });
+            return fkDatas;
+        }
+        else {
+            return undefined;
+        }
     }
     /**
      * 检查表格格式是否错误
@@ -353,7 +461,7 @@ class DataTable {
                     let line = data[j];
                     let v = line[i]; //找到相应的值
                     if (map[v] == true) {
-                        console.error(chalk_1.default.red(`表${this.name} 行${j + 4} 字段${field.name} 出现重复值 ${v}`));
+                        console.error(chalk_1.default.red(`表${this.name} 行${j + 4} 字段<${field.name}> 出现重复值 ${v}`));
                     }
                     map[v] = true;
                 }
@@ -362,15 +470,20 @@ class DataTable {
                 //外键检查
                 let fkTable = this.manager.getTableByName(field.fkTableName);
                 if (fkTable == null) {
-                    console.error(chalk_1.default.red(`表${this.name} 字段${field.name} 无法找到外键表 ${field.fkTableName}`));
+                    console.error(chalk_1.default.red(`表${this.name} 字段<${field.name}> 无法找到外键表 ${field.fkTableName}`));
+                    continue;
+                }
+                let fkField = fkTable.fields?.find(f => f.name == field.fkFieldName);
+                if (fkField == null) {
+                    console.error(chalk_1.default.red(`表${this.name} 字段<${field.name}> 无法找到外键 ${field.fkTableName}:${field.fkFieldName}`));
                     continue;
                 }
                 let list = fkTable.getFieldValueList(field.fkFieldName);
                 for (let j = 0; j < data.length; j++) {
                     let line = data[j];
-                    let v = line[i]; //找到相应的值
+                    let v = toTypeValue(line[i], fkField.type); //找到相应的值
                     if (v && v != -1 && list.indexOf(v) == -1) { //只有明确的值才检查
-                        console.error(chalk_1.default.red(`表${this.name} 行${j + 4} 字段${field.name} 无法找到外键值 ${v}`));
+                        console.error(chalk_1.default.red(`表${this.name} 行${j + 4} 字段<${field.name}> 无法找到外键值 ${v}`));
                     }
                 }
             }
@@ -378,19 +491,26 @@ class DataTable {
                 //外键数组
                 let fkTable = this.manager.getTableByName(field.fkTableName);
                 if (fkTable == null) {
-                    console.error(chalk_1.default.red(`表${this.name} 字段${field.name} 无法找到外键表 ${field.fkTableName}`));
+                    console.error(chalk_1.default.red(`表${this.name} 字段<${field.name}> 无法找到外键表 ${field.fkTableName}`));
+                    continue;
+                }
+                let fkField = fkTable.fields?.find(f => f.name == field.fkFieldName);
+                if (fkField == null) {
+                    console.error(chalk_1.default.red(`表${this.name} 字段<${field.name}> 无法找到外键 ${field.fkTableName}:${field.fkFieldName}`));
                     continue;
                 }
                 let list = fkTable.getFieldValueList(field.fkFieldName);
                 for (let j = 0; j < data.length; j++) {
                     let line = data[j];
                     let v = line[i]; //找到相应的值
-                    if (v)
+                    if (v) {
                         for (let i = 0; i < v.length; i++) {
-                            if (list.indexOf(v[i]) == -1) {
-                                console.error(chalk_1.default.red(`表${this.name} 行${j + 4} 字段${field.name} 无法找到外键值 ${v[i]}`));
+                            let vi = toTypeValue(v[i], fkField.type);
+                            if (list.indexOf(vi) == -1) {
+                                console.error(chalk_1.default.red(`表${this.name} 行${j + 4} 字段<${field.name}> 无法找到外键值[] ${v[i]}`));
                             }
                         }
+                    }
                 }
             }
         }

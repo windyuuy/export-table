@@ -9,6 +9,7 @@ class Field {
     name;
     describe;
     type;
+    index = -1;
     //外键
     fkTableName;
     fkFieldName;
@@ -18,6 +19,9 @@ class Field {
         this.name = name;
         this.describe = describe;
         this.type = type;
+    }
+    get isFKField() {
+        return this.fkTableName != null;
     }
 }
 exports.Field = Field;

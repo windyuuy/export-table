@@ -7,8 +7,10 @@ export declare class Field {
     name: string;
     describe: string;
     type: FiledType;
+    index: number;
     fkTableName: string | undefined;
     fkFieldName: string | undefined;
     translate: boolean;
     constructor(name: string, describe: string, type: FiledType);
+    get isFKField(): boolean;
 }

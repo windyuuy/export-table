@@ -19,6 +19,7 @@ __exportStar(require("./table/Workbook"), exports);
 __exportStar(require("./table/WorkbookManager"), exports);
 __exportStar(require("./iplugin/IPlugin"), exports);
 __exportStar(require("./iplugin/PluginBase"), exports);
+__exportStar(require("./iplugin/OutFilePath"), exports);
 __exportStar(require("./iplugin/HandleSheetParams"), exports);
 __exportStar(require("./iplugin/HandleBatchParams"), exports);
 __exportStar(require("./iplugin/Utils"), exports);

@@ -13,9 +13,12 @@ export class Field {
 	describe: string;
 	type: FiledType;
 
+	index: number = -1
+
 	//外键
 	fkTableName: string | undefined;
 	fkFieldName: string | undefined;
+
 
 	//翻译
 	translate: boolean = false;
@@ -23,5 +26,9 @@ export class Field {
 		this.name = name;
 		this.describe = describe;
 		this.type = type;
+	}
+
+	get isFKField() {
+		return this.fkTableName != null
 	}
 }

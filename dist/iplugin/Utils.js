@@ -1,14 +1,52 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.clearSpace = exports.makeFirstLetterLower = exports.makeFirstLetterUpper = exports.foreach = exports.st = exports.cmm = void 0;
+exports.clearSpace = exports.makeFirstLetterLower = exports.makeFirstLetterUpper = exports.foreach = exports.st = exports.cmm = exports.stdtemp = void 0;
+/**
+ * 标准模板文本
+ * @param s
+ * @returns
+ */
+function stdtemp(s) {
+    return s;
+}
+exports.stdtemp = stdtemp;
+/**
+ * 注解
+ * @param a
+ * @returns
+ */
 function cmm(a) { return ""; }
 exports.cmm = cmm;
+/**
+ * 表达式
+ * @param f
+ * @returns
+ */
 function st(f) {
     return f();
 }
 exports.st = st;
-function foreach(ls, f) {
-    return ls.map(e => f(e)).join("\n");
+/**
+ * 遍历列表生成字符串
+ * - 会自动去除头尾多余的换行符(LF)
+ * @param ls
+ * @param f
+ * @returns
+ */
+function foreach(ls, f, sign = "\n", autoTrim = true) {
+    let line = ls.map(e => {
+        let sl = f(e);
+        if (autoTrim) {
+            if (sl.startsWith("\n")) {
+                sl = sl.substring(1);
+            }
+            if (sl.endsWith("\n")) {
+                sl = sl.substring(0, sl.length - 1);
+            }
+        }
+        return sl;
+    }).join(sign);
+    return line;
 }
 exports.foreach = foreach;
 function makeFirstLetterUpper(str) {
