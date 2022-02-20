@@ -65,82 +65,82 @@ async function handler(argv) {
     let workbookManager = new WorkbookManager_1.WorkbookManager();
     await workbookManager.build(from); //加载所有表
     workbookManager.checkError();
-    let ps = one.split(":");
-    let tag = ps[1];
-    if (onename == null) {
-        onename = `name.${tag}`;
-    }
-    let pluginName = ps[0];
-    let pluginFullName = "export-table-pulgin-" + pluginName;
-    let plugin;
-    {
-        console.log("libs:", libs);
-        plugin = tryImport(pluginFullName);
-        if (plugin == ImportFailed) {
-            for (let lib of libs) {
-                plugin = tryImport((0, path_1.join)(lib, pluginFullName));
-                if (plugin != ImportFailed) {
-                    break;
+    let pscs = one.split(";");
+    for (let psc of pscs) {
+        let ps = psc.split(":");
+        let tag = ps[1];
+        let pluginName = ps[0];
+        let pluginFullName = "export-table-pulgin-" + pluginName;
+        let plugin;
+        {
+            console.log("libs:", libs);
+            plugin = tryImport(pluginFullName);
+            if (plugin == ImportFailed) {
+                for (let lib of libs) {
+                    plugin = tryImport((0, path_1.join)(lib, pluginFullName));
+                    if (plugin != ImportFailed) {
+                        break;
+                    }
                 }
             }
         }
-    }
-    if (plugin == ImportFailed) {
-        console.error(`plugin not found: <${pluginName}>`);
-        return;
-    }
-    let exportPlugins = plugin.ExportPlugins;
-    exportPlugins = exportPlugins ?? [];
-    let matchedPlugins = exportPlugins
-        .filter(p => p.tags.indexOf(tag) >= 0);
-    {
-        //导出每张表
-        console.log(`> handle sheets begin`);
-        let tables = workbookManager.dataTables;
-        for (let table of tables) {
-            if (tableNameFirstLetterUpper) {
-                table.name = firstLetterUpper(table.name);
-            }
-            if (matchedPlugins.length > 0) {
-                console.log(`>> handle sheet ${table.name}:`);
-                let paras = {
-                    name: table.name,
-                    tables: tables,
-                    table,
-                    workbookManager,
-                    fields: table.fields.filter(a => a.skip == false),
-                    datas: table.getDataList(),
-                    objects: table.getObjectList(),
-                    xxtea: encrypt,
-                    inject: injectMap,
-                    packagename: packagename,
-                    outPath: to,
-                    outFilePath: new OutFilePath_1.OutFilePath(to, table.name, "." + tag),
-                };
-                matchedPlugins.forEach(plugin => {
-                    console.log(`>>> - handle sheet <${table.name}> with [${plugin.name}]`);
-                    plugin.handleSheet(paras);
-                });
-            }
+        if (plugin == ImportFailed) {
+            console.error(`plugin not found: <${pluginName}>`);
+            return;
         }
-        console.log(`> handle sheets done`);
-    }
-    {
-        let tables = workbookManager.dataTables;
-        let paras = {
-            workbookManager: workbookManager,
-            tables,
-            xxtea: encrypt,
-            inject: injectMap,
-            packagename: packagename,
-            outPath: to,
-        };
-        console.log(`> handle batch begin`);
-        matchedPlugins.forEach(plugin => {
-            console.log(`>> - handle batch with [${plugin.name}]`);
-            plugin.handleBatch(paras);
-        });
-        console.log(`> handle batch done`);
+        let exportPlugins = plugin.ExportPlugins;
+        exportPlugins = exportPlugins ?? [];
+        let matchedPlugins = exportPlugins
+            .filter(p => p.tags.indexOf(tag) >= 0 || tag == p.name);
+        {
+            //导出每张表
+            console.log(`> handle sheets begin`);
+            let tables = workbookManager.dataTables;
+            for (let table of tables) {
+                if (tableNameFirstLetterUpper) {
+                    table.name = firstLetterUpper(table.name);
+                }
+                if (matchedPlugins.length > 0) {
+                    console.log(`>> handle sheet ${table.name}:`);
+                    let paras = {
+                        name: table.name,
+                        tables: tables,
+                        table,
+                        workbookManager,
+                        fields: table.fields.filter(a => a.skip == false),
+                        datas: table.getDataList(),
+                        objects: table.getObjectList(),
+                        xxtea: encrypt,
+                        inject: injectMap,
+                        packagename: packagename,
+                        outPath: to,
+                        outFilePath: new OutFilePath_1.OutFilePath(to, table.name, "." + tag),
+                    };
+                    matchedPlugins.forEach(plugin => {
+                        console.log(`>>> - handle sheet <${table.name}> with [${plugin.name}]`);
+                        plugin.handleSheet(paras);
+                    });
+                }
+            }
+            console.log(`> handle sheets done`);
+        }
+        {
+            let tables = workbookManager.dataTables;
+            let paras = {
+                workbookManager: workbookManager,
+                tables,
+                xxtea: encrypt,
+                inject: injectMap,
+                packagename: packagename,
+                outPath: to,
+            };
+            console.log(`> handle batch begin`);
+            matchedPlugins.forEach(plugin => {
+                console.log(`>> - handle batch with [${plugin.name}]`);
+                plugin.handleBatch(paras);
+            });
+            console.log(`> handle batch done`);
+        }
     }
 }
 exports.handler = handler;
