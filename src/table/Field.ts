@@ -1,15 +1,16 @@
+import { FieldExtendMode, FieldMeta } from "./meta/FieldMeta";
 
 export type FiledType = "any" | "uid" | "number" | "number[]" | "bool" | "bool[]" | "string" | "object" | "object[]" | "fk" | "string*" | "string[]" | "key" | "fk[]"
 
 
 export class Field {
-
 	/**
 	 * 是否跳过该字段
 	 */
 	skip: boolean = false;
 
 	name: string;
+	nameOrigin: string;
 	describe: string;
 	type: FiledType;
 
@@ -23,7 +24,8 @@ export class Field {
 	//翻译
 	translate: boolean = false;
 	constructor(name: string, describe: string, type: FiledType) {
-		this.name = name;
+		this.nameOrigin = name;
+		this.name = name
 		this.describe = describe;
 		this.type = type;
 	}
@@ -31,4 +33,21 @@ export class Field {
 	get isFKField() {
 		return this.fkTableName != null
 	}
+
+	applyMeta(fieldMeta: FieldMeta) {
+		if (fieldMeta.exportName) {
+			this.name = fieldMeta.exportName
+		}
+
+		if (fieldMeta.type) {
+			this.type = fieldMeta.type
+		}
+
+		if (fieldMeta.extendMode == FieldExtendMode.Sub) {
+			this.skip = true
+		} else {
+			this.skip = false
+		}
+	}
+
 }

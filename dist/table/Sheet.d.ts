@@ -1,7 +1,15 @@
 import { Cell } from "./Cell";
+import { SheetMeta } from "./meta/SheetMeta";
 export declare class Sheet {
+    constructor();
+    applyMeta(meta: SheetMeta): void;
     name: string;
+    nameOrigin: string;
+    isDefault: boolean;
+    workbookName: string;
+    setupName(name: string): void;
     data: Cell[][];
+    get fullName(): string;
     get rowLength(): number;
     get columnLength(): number;
     /**

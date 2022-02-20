@@ -25,11 +25,13 @@ export declare type HandleSheetParams = {
     /**
      * sheet 中所有数据
      * - any[行索引][行子项索引]
+     * - 不会包含跳过的字段
      */
     datas: any[][];
     /**
      * 对象列表
      * - 一个对象对应一行记录
+     * - 不会包含跳过的字段
      */
     objects: any[];
     xxtea: (str: string, key: string, deflate: boolean) => string;

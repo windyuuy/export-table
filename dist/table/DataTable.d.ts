@@ -2,6 +2,7 @@ import { Sheet } from "./Sheet";
 import { WorkbookManager } from "./WorkbookManager";
 import { Cell } from "./Cell";
 import { Field } from "./Field";
+import { SheetMeta } from "./meta/SheetMeta";
 /**
  * 专门处理普通数据表,可设定字段类型，添加移除对象等功能
  */
@@ -13,8 +14,14 @@ export declare class DataTable {
     /**
      * 表名
      */
-    name: string;
+    nameOrigin: string;
     manager: WorkbookManager | null;
+    /**
+     * 工作簿名
+     */
+    get workbookName(): string;
+    get fullName(): string;
+    name: string;
     constructor(
     /**
      * 当前操作的数据页
@@ -23,7 +30,8 @@ export declare class DataTable {
     /**
      * 表名
      */
-    name: string);
+    nameOrigin: string);
+    applyMeta(meta: SheetMeta): void;
     isNullCell(cell: Cell | null): boolean;
     protected getFields(): Field[] | null;
     protected _fields: Field[] | null;
@@ -31,6 +39,7 @@ export declare class DataTable {
      * 获取当前表中的字段列表
      */
     get fields(): Field[] | null;
+    get activeFields(): Field[] | null;
     protected getNewData(field: Field, data: any, lineNumber: number): any;
     protected _dataList: any[][] | undefined;
     get dataList(): any[][];
@@ -45,6 +54,7 @@ export declare class DataTable {
     getObjectList(): any[];
     getRowData(key: any, field: Field): any[] | undefined;
     getField(name: string): Field | undefined;
+    getTableByFK(field: Field): DataTable;
     getFKObject<T = any>(fkRefer: any, field: Field): T | undefined;
     getFKData<T = any[]>(fkRefer: any, field: Field): T | undefined;
     /**

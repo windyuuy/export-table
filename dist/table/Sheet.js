@@ -14,8 +14,30 @@ const buildExcelDate = (value, is1904) => {
     return (epoch - originDate) / (864e5);
 };
 class Sheet {
+    constructor() {
+    }
+    applyMeta(meta) {
+        if (meta.exportSheetName) {
+            this.name = meta.exportSheetName;
+        }
+    }
     name = "Sheet1";
+    nameOrigin = "Sheet1";
+    isDefault = false;
+    workbookName;
+    setupName(name) {
+        this.nameOrigin = name;
+        this.name = name;
+    }
     data = [];
+    get fullName() {
+        if (this.isDefault) {
+            return this.name;
+        }
+        else {
+            return `${this.workbookName}-${this.name}`;
+        }
+    }
     get rowLength() {
         return this.data.length;
     }

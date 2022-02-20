@@ -24,6 +24,7 @@ export function builder(yargs:typeof import("yargs")) {
         .boolean("tableNameFirstLetterUpper").describe("tableNameFirstLetterUpper", "talbe首字母大写")
         .demand(["from", "to"])
         .array("lib").describe("external npm modules path", "扩展npm模块路径")
+        .array("scene").describe("export scene", "导出场景")
         .help("h")
 }
 
@@ -51,7 +52,7 @@ function tryImport<T>(str: string): T | symbol {
 
 export async function handler(argv: any) {
     let from: string = argv.from;
-    let to: string = argv.to;
+    let toRoot: string = argv.to;
     let one: string | undefined = argv.one;
     let onename: string = argv.onename;
     let alls: string[] = argv.alls || [];
@@ -60,6 +61,7 @@ export async function handler(argv: any) {
     let packagename: string | undefined = argv.packagename;
     let tableNameFirstLetterUpper: boolean | false = argv.tableNameFirstLetterUpper;
     let libs: string[] = argv.lib || []
+    let scenes: string[] = argv.scene || []
 
     let injectMap: { [key: string]: boolean } = {}
     for (let k of inject) {
@@ -68,91 +70,110 @@ export async function handler(argv: any) {
 
     //加载所有表格数据
     let workbookManager = new WorkbookManager();
+    // 暂时只需要支持一个
+    workbookManager.meta.scenes = scenes.concat()
     await workbookManager.build(from);//加载所有表
-    workbookManager.checkError();
+    const runExport = (scene?: string) => {
+        let to = toRoot
+        if (scene) {
+            to = join(toRoot, scene)
 
-    let pscs = one!.split(";")
-    for (let psc of pscs) {
-        let ps = psc!.split(":")
-        let tag = ps[1]
+            // 应用场景配置
+            workbookManager.applySceneConfig(scene)
+        }
 
-        let pluginName = ps[0]
-        let pluginFullName = "export-table-pulgin-" + pluginName
-        type TPlugin = { ExportPlugins: IPlugin[] }
-        let plugin: TPlugin | symbol
-        {
-            console.log("libs:", libs)
-            plugin = tryImport<TPlugin>(pluginFullName)
+        workbookManager.checkError();
+
+        let pscs = one!.split(";")
+        for (let psc of pscs) {
+            let ps = psc!.split(":")
+            let tag = ps[1]
+
+            let pluginName = ps[0]
+            let pluginFullName = "export-table-pulgin-" + pluginName
+            type TPlugin = { ExportPlugins: IPlugin[] }
+            let plugin: TPlugin | symbol
+            {
+                plugin = tryImport<TPlugin>(pluginFullName)
+                if (plugin == ImportFailed) {
+                    for (let lib of libs) {
+                        plugin = tryImport(join(lib, pluginFullName))
+                        if (plugin != ImportFailed) {
+                            break
+                        }
+                    }
+                }
+            }
             if (plugin == ImportFailed) {
-                for (let lib of libs) {
-                    plugin = tryImport(join(lib, pluginFullName))
-                    if (plugin != ImportFailed) {
-                        break
+                console.error(`plugin not found: <${pluginName}>`)
+                return;
+            }
+            let exportPlugins: IPlugin[] = (plugin as TPlugin).ExportPlugins
+            exportPlugins = exportPlugins ?? []
+            let matchedPlugins = exportPlugins
+                .filter(p => p.tags.indexOf(tag) >= 0 || tag == p.name)
+
+            {
+
+                //导出每张表
+                console.log(`> handle sheets begin`)
+
+                let tables = workbookManager.dataTables
+                for (let table of tables) {
+                    if (tableNameFirstLetterUpper) {
+                        table.nameOrigin = firstLetterUpper(table.nameOrigin);
+                    }
+                    if (matchedPlugins.length > 0) {
+                        console.log(`>> handle sheet ${table.nameOrigin}:`)
+                        let paras: HandleSheetParams = {
+                            name: table.nameOrigin,
+                            tables: tables,
+                            table,
+                            workbookManager,
+                            fields: table.fields!.filter(a => a.skip == false),
+                            datas: table.getDataList(),
+                            objects: table.getObjectList(),
+                            xxtea: encrypt,
+                            inject: injectMap,
+                            packagename: packagename,
+                            outPath: to,
+                            outFilePath: new OutFilePath(to, table.fullName, "." + tag),
+                        }
+                        matchedPlugins.forEach(plugin => {
+                            console.log(`>>> - handle sheet <${table.nameOrigin}> with [${plugin.name}]`)
+                            plugin.handleSheet(paras)
+                        })
                     }
                 }
+                console.log(`> handle sheets done`)
             }
-        }
-        if (plugin == ImportFailed) {
-            console.error(`plugin not found: <${pluginName}>`)
-            return;
-        }
-        let exportPlugins: IPlugin[] = (plugin as TPlugin).ExportPlugins
-        exportPlugins = exportPlugins ?? []
-        let matchedPlugins = exportPlugins
-            .filter(p => p.tags.indexOf(tag) >= 0 || tag == p.name)
 
-        {
-
-            //导出每张表
-            console.log(`> handle sheets begin`)
-
-            let tables = workbookManager.dataTables
-            for (let table of tables) {
-                if (tableNameFirstLetterUpper) {
-                    table.name = firstLetterUpper(table.name);
+            {
+                let tables = workbookManager.dataTables
+                let paras: HandleBatchParams = {
+                    workbookManager: workbookManager,
+                    tables,
+                    xxtea: encrypt,
+                    inject: injectMap,
+                    packagename: packagename,
+                    outPath: to,
                 }
-                if (matchedPlugins.length > 0) {
-                    console.log(`>> handle sheet ${table.name}:`)
-                    let paras: HandleSheetParams = {
-                        name: table.name,
-                        tables: tables,
-                        table,
-                        workbookManager,
-                        fields: table.fields!.filter(a => a.skip == false),
-                        datas: table.getDataList(),
-                        objects: table.getObjectList(),
-                        xxtea: encrypt,
-                        inject: injectMap,
-                        packagename: packagename,
-                        outPath: to,
-                        outFilePath: new OutFilePath(to, table.name, "." + tag),
-                    }
-                    matchedPlugins.forEach(plugin => {
-                        console.log(`>>> - handle sheet <${table.name}> with [${plugin.name}]`)
-                        plugin.handleSheet(paras)
-                    })
-                }
+                console.log(`> handle batch begin`)
+                matchedPlugins.forEach(plugin => {
+                    console.log(`>> - handle batch with [${plugin.name}]`)
+                    plugin.handleBatch(paras)
+                })
+                console.log(`> handle batch done`)
             }
-            console.log(`> handle sheets done`)
         }
+    }
 
-        {
-            let tables = workbookManager.dataTables
-            let paras: HandleBatchParams = {
-                workbookManager: workbookManager,
-                tables,
-                xxtea: encrypt,
-                inject: injectMap,
-                packagename: packagename,
-                outPath: to,
-            }
-            console.log(`> handle batch begin`)
-            matchedPlugins.forEach(plugin => {
-                console.log(`>> - handle batch with [${plugin.name}]`)
-                plugin.handleBatch(paras)
-            })
-            console.log(`> handle batch done`)
+    if (scenes.length > 0) {
+        for (let scene of scenes) {
+            runExport(scene)
         }
+    } else {
+        runExport(undefined)
     }
 
 }

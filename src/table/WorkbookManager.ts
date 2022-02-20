@@ -3,13 +3,29 @@ import * as path from "path"
 import { Workbook } from "./Workbook";
 import { DataTable } from "./DataTable";
 import chalk from "chalk";
-import { table } from "console";
+import { SceneMetaManager } from "./meta/SceneMetaManager";
 export class WorkbookManager {
 
     protected _list:Workbook[]=[];
-    protected _tables:DataTable[]|null=null;
+    protected _tables: DataTable[] | null = null;
+    meta: SceneMetaManager = new SceneMetaManager()
 
     constructor(){
+    }
+
+    applySceneConfig(scene0: string) {
+        let scene = this.meta.scenes.find(s => s == scene0)
+        if (scene == undefined) {
+            return
+        }
+
+        let dataTables = this.dataTables
+        for (let workbook of this._list) {
+            let sceneMeta = workbook.metaManager.getSceneMeta(scene)
+            if (sceneMeta != null) {
+                sceneMeta.applyMeta(dataTables)
+            }
+        }
     }
 
     async build(buildPath:string){
@@ -69,15 +85,9 @@ export class WorkbookManager {
         if(this._tables==null){
             this._tables=[];
             for (let b of this._list) {
-                if (b.sheets.length >= 1) {
-                    let sheet = b.sheets[0]
-                    if (sheet.name == "Sheet1") {
-                        sheet.name = b.name
-                    }
-                }
                 for (let sheet of b.sheets) {
                     if (sheet && sheet.data.length >= 3) {
-                        let datatable = new DataTable(sheet, sheet.name);
+                        let datatable = new DataTable(sheet, sheet.nameOrigin);
                         datatable.manager = this;
                         this._tables.push(datatable);
                     }
@@ -92,8 +102,8 @@ export class WorkbookManager {
      * 获取表名
      * @param name 
      */
-    getTableByName(name:string){
-        return this.dataTables.find(a=>a.name==name)
+    getTableByName(name: string, workbookName: string) {
+        return this.dataTables.find(a => a.nameOrigin == name && a.workbookName == workbookName)
     }
 
     /**

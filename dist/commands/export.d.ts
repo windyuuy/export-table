@@ -24,5 +24,7 @@ export declare function builder(yargs: typeof import("yargs")): import("yargs").
     to: string;
 } & {
     lib: (string | number)[] | undefined;
+} & {
+    scene: (string | number)[] | undefined;
 }>;
 export declare function handler(argv: any): Promise<void>;

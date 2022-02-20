@@ -1,11 +1,17 @@
 /// <reference types="node" />
 import { Sheet } from "./Sheet";
+import { WorkbookMeta } from "./meta/WorkbookMeta";
+import { WorkbookMetaManager } from "./meta/WorkbookMetaManager";
 export declare class Workbook {
     /**
      * 文件路径
      */
     filepath: string;
     sheets: Sheet[];
+    /**
+     * 场景管理器
+     */
+    metaManager: WorkbookMetaManager;
     constructor();
     /**
      * 根据表格名称获取表格
@@ -23,6 +29,7 @@ export declare class Workbook {
      * @param sheet
      */
     removeSheet(sheet: Sheet): void;
+    protected addSceneMeta(sceneMeta: WorkbookMeta): void;
     /**
      * 加载工作簿
      * @param buff

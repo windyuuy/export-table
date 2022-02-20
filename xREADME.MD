@@ -131,19 +131,15 @@ $ ccf QuickTable genccstrings ../RelaxFarm/assets ../../strings.xlsx
 $ ccf QuickTable splitlocal ../../strings.xlsx ../RelaxFarm/assets/resources/localization/ -t {template}/splitlocal_json.razor -n strings_lang.json
 ```
 
-## 模板介绍
+### 针对不同场景应用meta文件
 
-### export_ts.razor
-生成对应表格的模型，以及数据。如果注入`nulldata`则将会不导出数据，可以配合`tabledatas_json.razor`使用。
+- meta文件命名: 场景.meta
 
-### tabledatas_json.razor
-将所有表格加密并导出一个json文件，使表格数据与代码分离。
+- #sheet [新sheet名:][-]旧sheet名
+	- 表示新的sheet名替代旧的sheet名
+	- 带`-`表示不自动继承所有字段, 需要手动继承字段
 
-### tableinit_ts.razor
-导出一个函数，用于将 `tabledatas_json.razor` 的数据赋值到 `export_ts.razor` 的模型中，往往在`nulldata`时使用。
-
-### applylocal_ts.razor
-导出一个处理函数，用于将`语言表`所导出的数据映射到当前的表中，使语言数据覆盖到当前表中。配合 `splitlocal_ts.razor` 或 `splitlocal_json.razor` 使用
-
-### splitlocal_ts.razor splitlocal_json.razor
-将多`语言表`拆分导出单个文件的模板，分别导出json和ts格式，一般推荐使用json文件，往往翻译文本会比较大，建议和代码分离。
+- [:-][新字段名[:类型]=]旧字段名
+	- 表示使用新的字段名代替旧的字段名, 并用新类型覆盖字段类型
+	- 如果没有填新字段名, 那么表示显示声明要继承旧字段
+	- `-`表示显示声明不继承该字段

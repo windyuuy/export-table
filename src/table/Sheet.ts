@@ -1,6 +1,7 @@
 import { Cell } from "./Cell";
 
 import * as xlsx from "xlsx-color"
+import { SheetMeta } from "./meta/SheetMeta";
 
 const isBoolean = (maybeBoolean:any) => typeof maybeBoolean === 'boolean';
 const isNumber = (maybeNumber:any) => typeof maybeNumber === 'number';
@@ -17,8 +18,32 @@ const buildExcelDate = (value:any, is1904?:boolean) => {
 
 
 export class Sheet {
-    name:string="Sheet1"
-    data:Cell[][]=[];
+    constructor() {
+
+    }
+
+    applyMeta(meta: SheetMeta) {
+        if (meta.exportSheetName) {
+            this.name = meta.exportSheetName
+        }
+    }
+    name: string = "Sheet1"
+    nameOrigin: string = "Sheet1"
+    isDefault = false
+    workbookName!: string
+    setupName(name: string) {
+        this.nameOrigin = name
+        this.name = name
+    }
+    data: Cell[][] = [];
+
+    get fullName() {
+        if (this.isDefault) {
+            return this.name
+        } else {
+            return `${this.workbookName}-${this.name}`
+        }
+    }
 
     get rowLength(){
         return this.data.length;

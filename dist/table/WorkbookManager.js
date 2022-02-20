@@ -6,10 +6,25 @@ const path = require("path");
 const Workbook_1 = require("./Workbook");
 const DataTable_1 = require("./DataTable");
 const chalk_1 = require("chalk");
+const SceneMetaManager_1 = require("./meta/SceneMetaManager");
 class WorkbookManager {
     _list = [];
     _tables = null;
+    meta = new SceneMetaManager_1.SceneMetaManager();
     constructor() {
+    }
+    applySceneConfig(scene0) {
+        let scene = this.meta.scenes.find(s => s == scene0);
+        if (scene == undefined) {
+            return;
+        }
+        let dataTables = this.dataTables;
+        for (let workbook of this._list) {
+            let sceneMeta = workbook.metaManager.getSceneMeta(scene);
+            if (sceneMeta != null) {
+                sceneMeta.applyMeta(dataTables);
+            }
+        }
     }
     async build(buildPath) {
         let buildPromiseList = [];
@@ -61,15 +76,9 @@ class WorkbookManager {
         if (this._tables == null) {
             this._tables = [];
             for (let b of this._list) {
-                if (b.sheets.length >= 1) {
-                    let sheet = b.sheets[0];
-                    if (sheet.name == "Sheet1") {
-                        sheet.name = b.name;
-                    }
-                }
                 for (let sheet of b.sheets) {
                     if (sheet && sheet.data.length >= 3) {
-                        let datatable = new DataTable_1.DataTable(sheet, sheet.name);
+                        let datatable = new DataTable_1.DataTable(sheet, sheet.nameOrigin);
                         datatable.manager = this;
                         this._tables.push(datatable);
                     }
@@ -82,8 +91,8 @@ class WorkbookManager {
      * 获取表名
      * @param name
      */
-    getTableByName(name) {
-        return this.dataTables.find(a => a.name == name);
+    getTableByName(name, workbookName) {
+        return this.dataTables.find(a => a.nameOrigin == name && a.workbookName == workbookName);
     }
     /**
      * 检查所有表的错误
