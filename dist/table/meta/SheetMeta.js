@@ -21,9 +21,9 @@ class SheetMeta {
     data) {
         this.data = data;
         let sheetMeta = data.find(d => d.startsWith("#sheet "));
-        let m = sheetMeta.match(/\#sheet (?:(\w+):)?(\-)?(\w+)/);
-        let exportSheetName = m[1];
-        let sign = m[2];
+        let m = sheetMeta.match(/\#sheet (\-)?(?:(\w+):)?(\w+)/);
+        let sign = m[1];
+        let exportSheetName = m[2];
         let sheetName = m[3];
         this.name = sheetName;
         this.exportSheetName = exportSheetName;

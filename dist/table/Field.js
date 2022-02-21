@@ -7,6 +7,7 @@ class Field {
      * 是否跳过该字段
      */
     skip = false;
+    skipOrigin = false;
     name;
     nameOrigin;
     describe;

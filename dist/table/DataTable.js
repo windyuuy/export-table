@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.DataTable = void 0;
 const chalk_1 = require("chalk");
 const Field_1 = require("./Field");
+const SheetMeta_1 = require("./meta/SheetMeta");
 const toTypeValue = (v, t) => {
     if (typeof (v) != t) {
         if (t == "string") {
@@ -57,6 +58,16 @@ class DataTable {
         if (meta.exportSheetName) {
             this.name = meta.exportSheetName;
         }
+        if (meta.extendMode == SheetMeta_1.SheetExtendMode.Sub) {
+            for (let field of this.fields ?? []) {
+                field.skip = true;
+            }
+        }
+        else {
+            for (let field of this.fields ?? []) {
+                field.skip = field.skipOrigin;
+            }
+        }
         meta.fieldMetas.forEach((fieldMeta) => {
             let field = this.getField(fieldMeta.name);
             if (field != null) {
@@ -93,6 +104,7 @@ class DataTable {
             if (type === "") {
                 let skip = new Field_1.Field(name || des, des || name, "any");
                 skip.skip = true;
+                skip.skipOrigin = true;
                 skip.index = i;
                 fieldList.push(skip);
                 continue;
@@ -151,7 +163,7 @@ class DataTable {
         return this._fields ?? (this._fields = this.getFields());
     }
     get activeFields() {
-        return this.fields?.filter(f => !f.skip) ?? null;
+        return this.fields?.filter(f => f.skip == false) ?? null;
     }
     getNewData(field, data, lineNumber) {
         if (field.type == "any") {
@@ -383,7 +395,7 @@ class DataTable {
         let obj = {};
         for (let i = 0; i < fieldList.length; i++) {
             let f = fieldList[i];
-            obj[f.nameOrigin] = data[i];
+            obj[f.name] = data[i];
         }
         return obj;
     }

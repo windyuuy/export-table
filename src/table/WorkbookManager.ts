@@ -113,4 +113,14 @@ export class WorkbookManager {
         this.dataTables.forEach(a=>a.checkError());
     }
 
+    collectScenes() {
+        let scenes: string[] = []
+        this.workbooks.forEach(w => {
+            for (let meta of w.metaManager.sceneMetas) {
+                scenes.push(meta.name)
+            }
+        })
+        return scenes
+    }
+
 }

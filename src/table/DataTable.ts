@@ -3,7 +3,7 @@ import { WorkbookManager } from "./WorkbookManager";
 import chalk from "chalk";
 import { Cell } from "./Cell";
 import { Field } from "./Field";
-import { SheetMeta } from "./meta/SheetMeta";
+import { SheetExtendMode, SheetMeta } from "./meta/SheetMeta";
 
 const toTypeValue = (v: any, t: string) => {
     if (typeof (v) != t) {
@@ -59,6 +59,15 @@ export class DataTable {
         if (meta.exportSheetName) {
             this.name = meta.exportSheetName
         }
+        if (meta.extendMode == SheetExtendMode.Sub) {
+            for (let field of this.fields ?? []) {
+                field.skip = true
+            }
+        } else {
+            for (let field of this.fields ?? []) {
+                field.skip = field.skipOrigin
+            }
+        }
 
         meta.fieldMetas.forEach((fieldMeta) => {
             let field = this.getField(fieldMeta.name)
@@ -68,6 +77,7 @@ export class DataTable {
                 console.warn(chalk.yellow(`apply field meta for invalid field: ${fieldMeta.name}`))
             }
         })
+
     }
 
     isNullCell(cell:Cell|null){
@@ -100,6 +110,7 @@ export class DataTable {
             if (type === "") {
                 let skip = new Field(name || des, des || name, "any");
                 skip.skip = true;
+                skip.skipOrigin = true;
                 skip.index = i
                 fieldList.push(skip)
                 continue;
@@ -161,7 +172,7 @@ export class DataTable {
     }
 
     get activeFields(): Field[] | null {
-        return this.fields?.filter(f => !f.skip) ?? null
+        return this.fields?.filter(f => f.skip == false) ?? null
     }
 
     
@@ -375,7 +386,7 @@ export class DataTable {
         let obj: any = {}
         for (let i = 0; i < fieldList.length; i++) {
             let f = fieldList[i];
-            obj[f.nameOrigin] = data[i];
+            obj[f.name] = data[i];
         }
         return obj
     }

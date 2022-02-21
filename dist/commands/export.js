@@ -117,7 +117,7 @@ async function handler(argv) {
                             tables: tables,
                             table,
                             workbookManager,
-                            fields: table.fields.filter(a => a.skip == false),
+                            fields: table.activeFields,
                             datas: table.getDataList(),
                             objects: table.getObjectList(),
                             xxtea: encrypt,
@@ -154,6 +154,9 @@ async function handler(argv) {
         }
     };
     if (scenes.length > 0) {
+        if (scenes.length == 1 && scenes[0] == "*") {
+            scenes = workbookManager.collectScenes();
+        }
         for (let scene of scenes) {
             runExport(scene);
         }

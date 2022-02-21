@@ -5,6 +5,7 @@ export declare class Field {
      * 是否跳过该字段
      */
     skip: boolean;
+    skipOrigin: boolean;
     name: string;
     nameOrigin: string;
     describe: string;

@@ -135,7 +135,7 @@ $ ccf QuickTable splitlocal ../../strings.xlsx ../RelaxFarm/assets/resources/loc
 
 - meta文件命名: 场景.meta
 
-- #sheet [新sheet名:][-]旧sheet名
+- #sheet [-][新sheet名:]旧sheet名
 	- 表示新的sheet名替代旧的sheet名
 	- 带`-`表示不自动继承所有字段, 需要手动继承字段
 

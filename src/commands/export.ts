@@ -73,6 +73,7 @@ export async function handler(argv: any) {
     // 暂时只需要支持一个
     workbookManager.meta.scenes = scenes.concat()
     await workbookManager.build(from);//加载所有表
+
     const runExport = (scene?: string) => {
         let to = toRoot
         if (scene) {
@@ -130,7 +131,7 @@ export async function handler(argv: any) {
                             tables: tables,
                             table,
                             workbookManager,
-                            fields: table.fields!.filter(a => a.skip == false),
+                            fields: table.activeFields!,
                             datas: table.getDataList(),
                             objects: table.getObjectList(),
                             xxtea: encrypt,
@@ -169,6 +170,9 @@ export async function handler(argv: any) {
     }
 
     if (scenes.length > 0) {
+        if (scenes.length == 1 && scenes[0] == "*") {
+            scenes = workbookManager.collectScenes()
+        }
         for (let scene of scenes) {
             runExport(scene)
         }

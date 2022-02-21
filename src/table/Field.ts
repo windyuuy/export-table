@@ -8,6 +8,7 @@ export class Field {
 	 * 是否跳过该字段
 	 */
 	skip: boolean = false;
+	skipOrigin: boolean = false;
 
 	name: string;
 	nameOrigin: string;

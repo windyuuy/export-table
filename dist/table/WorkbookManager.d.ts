@@ -26,4 +26,5 @@ export declare class WorkbookManager {
      * 检查所有表的错误
      */
     checkError(): void;
+    collectScenes(): string[];
 }

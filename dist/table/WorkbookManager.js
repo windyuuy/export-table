@@ -100,6 +100,15 @@ class WorkbookManager {
     checkError() {
         this.dataTables.forEach(a => a.checkError());
     }
+    collectScenes() {
+        let scenes = [];
+        this.workbooks.forEach(w => {
+            for (let meta of w.metaManager.sceneMetas) {
+                scenes.push(meta.name);
+            }
+        });
+        return scenes;
+    }
 }
 exports.WorkbookManager = WorkbookManager;
 //# sourceMappingURL=WorkbookManager.js.map
