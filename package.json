@@ -1,6 +1,6 @@
 {
     "name": "windy-quicktable",
-    "version": "1.3.77",
+    "version": "1.3.79",
     "description": "",
     "main": "dist/index.js",
     "files": [
@@ -10,7 +10,8 @@
     ],
     "scripts": {
         "pubccf": "ccf publish",
-        "revise": "ccf revise --registry http://127.0.0.1:8081"
+        "revise": "ccf revise --registry http://127.0.0.1:8081",
+        "publish": "npm-publish --token=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"
     },
     "bin": {
         "quicktable": "bin/quicktable.js"
