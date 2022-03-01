@@ -1,1 +1,1 @@
-call node ../dist/launch.js export src --one csharp:cs dist --lib E:\DATA\Projects\netease --scene client
+call node ../dist/launch.js export src dist --tags csharp:cs --libs E:\DATA\Projects\netease\quicktable --scenes client

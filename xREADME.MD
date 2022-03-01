@@ -1,5 +1,5 @@
 # QuickTable 表格工具使用说明书
-本工具基于旧的表格工具（ExcelExport）进行重构，与原工具保持兼容，精简了代码并加入了全新的功能，支持生成拥有样式和备注的表格；支持读取表格中的备注；支持多语言表格处理等；并且加入了数据导出模板的支持，极大提升了表格导出工具的实用性。可依据项目自定义生成导出数据。
+本导表工具仅仅是个启动
 ## 表格格式定义
 不同作用的表格拥有不同的格式。当前分为两种表格：数据表用于策划配置；语言文本表用于文本翻译。
 ### 数据表
@@ -105,32 +105,6 @@ ok | 确认 | Ok |
 ```shell
 $ ccf QuickTable export ../../Excel ../../assets/resources/scripts/configs --one {template}/export_ts.razor --onename name.ts --alls {template}/tableinit_ts.razor --allnames TableInit.ts
 ```
-导出的具体可是可以参考对应的.razor模板文件。
-> {template} 可自动指向工具中默认模版目录
-
-### 导出C#代码
-```shell
-$ ccf QuickTable export2 excel_dir output_dir --one cs --onename name.cs
-```
-
-### 多语言表生成
-从表格中抽取 string* 类型的字段，并合并值local.xlsx文件中。
-```shell
-$ ccf QuickTable genlocal ../../Excel ../../local.xlsx
-```
-
-### Cocos项目字符串文件生成
-对Cocos项目界面文件和代码文件进行字符串key提取
-```shell
-$ ccf QuickTable genccstrings ../RelaxFarm/assets ../../strings.xlsx
-```
-
-### 语言数据导出
-拆分语言表中的每一列，分别生成多个文件。具体文件格式可以参考对应的.razor模板文件。
-```shell
-$ ccf QuickTable splitlocal ../../strings.xlsx ../RelaxFarm/assets/resources/localization/ -t {template}/splitlocal_json.razor -n strings_lang.json
-```
-
 ### 针对不同场景应用meta文件
 
 - meta文件命名: 场景.meta
