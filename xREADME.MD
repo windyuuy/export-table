@@ -1,5 +1,5 @@
 # QuickTable 表格工具使用说明书
-本导表工具仅仅是个启动
+
 ## 表格格式定义
 不同作用的表格拥有不同的格式。当前分为两种表格：数据表用于策划配置；语言文本表用于文本翻译。
 ### 数据表
@@ -102,8 +102,15 @@ ok | 确认 | Ok |
 以下内容需要项目组主程完全掌握
 ### 表格导出
 导出表格，可以每张表格单独导出，或是全部数据一起导出。
+
+- 命令行基本格式
+
 ```shell
-$ ccf QuickTable export ../../Excel ../../assets/resources/scripts/configs --one {template}/export_ts.razor --onename name.ts --alls {template}/tableinit_ts.razor --allnames TableInit.ts
+$ call quicktable export ${配表路径} ${导出路径} --tags 插件标签
+
+例如:
+rem 导出多语言表
+$call quicktable export ../../tools/meta-utils/MEEC_xls/奇妙的身体/i18n ./packs/behaviors/texts --tags meec:lang
 ```
 ### 针对不同场景应用meta文件
 
