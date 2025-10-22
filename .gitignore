@@ -3,3 +3,5 @@
 /ccf_temp
 /test/src
 /test/dist
+pnpm-lock.yaml
+.npmrc
