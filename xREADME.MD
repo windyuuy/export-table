@@ -112,9 +112,9 @@ $ npm i -g windy-quicktable
 ```
 
 - 安装导表插件
-导表工具依赖导表插件导出具体格式, 具体安装方法参照插件各自文档说明, 如: [typescript导表工具](https://gitee.com/windyuuy/export-table-pulgin-typescript)
+导表工具依赖导表插件导出具体格式, 具体安装方法参照插件各自文档说明, 如: [typescript导表工具](https://gitee.com/windyuuy/export-table-plugin-typescript)
 ```shell
-$ npm i -g export-table-pulgin-插件名
+$ npm i -g export-table-plugin-插件名
 ```
 
 - 命令行基本格式

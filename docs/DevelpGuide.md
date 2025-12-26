@@ -27,7 +27,7 @@ npm i -g export-table-lib
 #### 处理导表信息
 
 - 创建插件代码
-  - 更多开发细节可以参考: [meec插件项目源码](https://gitee.com/windyuuy/export-table-pulgin-meec/tree/master)
+  - 更多开发细节可以参考: [meec插件项目源码](https://gitee.com/windyuuy/export-table-plugin-meec/tree/master)
 
 ```typescript
 ///file: ./dist/index.js
@@ -62,7 +62,7 @@ export const ExportPlugins = [
 
 ```json
 {
-  "name": "export-table-pulgin-dialog",
+  "name": "export-table-plugin-dialog",
   "version": "1.0.5",
   "description": "export dialog for meec",
     // main字段的设置很重要, 需要指向上面创建的index.js !!!
@@ -94,7 +94,7 @@ export const ExportPlugins = [
 
   ```shell
   // 安装插件
-  npm i -g windy-quicktable export-table-pulgin-dialog
+  npm i -g windy-quicktable export-table-plugin-dialog
   // 导表
   quicktable export $from $to --tags meec:dialog
   ```
