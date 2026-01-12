@@ -150,3 +150,6 @@ $ call quicktable export ../../tools/meta-utils/MEEC_xls/奇妙的身体/i18n ./
 
 ### 插件开发
 参考 [导表插件开发指南](./docs/DevelopGuide.md)
+
+### 开发计划
+参考 [开发计划](./TODO)
