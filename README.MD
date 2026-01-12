@@ -148,6 +148,30 @@ $ call quicktable export ../../tools/meta-utils/MEEC_xls/奇妙的身体/i18n ./
 $ call quicktable export ../../tools/meta-utils/MEEC_xls/奇妙的身体/i18n ./packs/behaviors/texts --tags meec:lang --scenes server --scene client
 ```
 
+### 按标签导出(待实现)
+
+可以使用tag[]类型给记录加tag, 可用于一份表格分别导出前后端等用途
+
+**tags** | ID | 名称 |  其他属性  
+-|-|-|-
+| | id | name | ... |
+**tag[]** | uid | string | ... |
+c | 1 | 普通攻击 | ... |
+s | 2 | 范围攻击 | ... |
+
+还可以加一行特殊记录, 用于给字段加tag, 可用于一份表格分别导出前后端等用途
+- 注意字段标签行首字段需要以#开头
+
+tags | ID | 名称 |  其他属性  
+-|-|-|-
+| | id | name | ... |
+tag[] | uid | string | ... |
+| | **#c** | **s,c** | **s...**
+c | 1 | 普通攻击 | ... |
+s | 2 | 范围攻击 | ... |
+
+
+
 ### 插件开发
 参考 [导表插件开发指南](./docs/DevelopGuide.md)
 
